@@ -288,7 +288,8 @@ h1, h2, h3, h4 {
   background: linear-gradient(180deg, transparent 55%, rgba(7,21,15,.35));
 }
 .split__img-frame img { width: 100%; height: clamp(380px, 50vw, 560px); object-fit: cover; transform: scale(1.16); will-change: transform; }
-.split__img-frame--portrait img { object-position: center 22%; }
+.split__img-frame--portrait img { object-position: center 18%; }
+.split__img-frame--portrait::after { display: none; }
 
 .split__badge {
   position: absolute; bottom: -22px; right: -10px;
@@ -411,18 +412,17 @@ h1, h2, h3, h4 {
 .speak-dot { color: var(--gold); font-size: .7rem; }
 
 .pull-quote {
-  max-width: 880px; margin: 0 auto; text-align: center;
-  padding: 44px 36px; border: 1px solid var(--line); border-radius: var(--r-lg);
-  background: var(--paper); position: relative; box-shadow: var(--shadow-sm);
+  max-width: 920px; margin: 0 auto; text-align: center;
+  padding: 0 16px; border: none; background: none; box-shadow: none;
 }
 .pull-quote::before {
-  content: "\201C"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-  font-family: var(--serif); font-size: 5rem; color: var(--gold); line-height: 1;
-  background: var(--paper); padding: 0 16px;
+  content: "\201C"; display: block;
+  font-family: var(--serif); font-size: 4rem; color: var(--gold); line-height: .5;
+  margin: 0 0 18px;
 }
 .pull-quote p {
   font-family: var(--serif); font-style: italic; font-size: clamp(1.3rem, 2.6vw, 1.85rem);
-  line-height: 1.4; color: var(--ink); margin: 0;
+  line-height: 1.45; color: var(--ink); margin: 0;
 }
 
 /* ---------- Events / Master Index ---------- */
