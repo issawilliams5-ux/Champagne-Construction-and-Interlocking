@@ -27,6 +27,13 @@ python3 -m http.server 8000
 # then visit http://localhost:8000
 ```
 
+## Imagery
+
+- 20+ premium royalty-free photos (Unsplash, commercial-use) drive the design — full-screen hero, two full-width **parallax interlude bands**, a 16-tile masonry **portfolio**, and per-service cards.
+- Effects: subtle **zoom-on-hover**, **scroll parallax** (disabled for `prefers-reduced-motion`), and **fade-in-on-load** reveals.
+- **No broken-image boxes, ever:** if any external image is blocked or unavailable, JavaScript swaps in an elegant on-brand SVG fallback (deep-green → gold gradient with monogram), so the layout always looks intentional.
+- To self-host images for maximum reliability/performance, download the curated set into a local `assets/` folder and point the `src` attributes there.
+
 ## Notes
 
 - Review section paraphrases publicly visible review *themes* only — no quotes or statistics are fabricated.
