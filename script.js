@@ -26,14 +26,14 @@
         var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560">' +
           '<defs>' +
           '<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f2137"/><stop offset="1" stop-color="#1a3a5c"/></linearGradient>' +
-          '<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#1d4ed8" stroke-opacity=".12" stroke-width="1"/></pattern>' +
+          '<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#b45309" stroke-opacity=".12" stroke-width="1"/></pattern>' +
           '</defs>' +
           '<rect width="800" height="560" fill="url(#bg)"/>' +
           '<rect width="800" height="560" fill="url(#grid)"/>' +
-          '<circle cx="400" cy="238" r="54" fill="none" stroke="#2563eb" stroke-opacity=".5" stroke-width="2"/>' +
-          '<path d="M400 214a18 18 0 0 1 18 18c0 13.5-18 33-18 33s-18-19.5-18-33a18 18 0 0 1 18-18z" fill="#2563eb"/>' +
+          '<circle cx="400" cy="238" r="54" fill="none" stroke="#d97706" stroke-opacity=".5" stroke-width="2"/>' +
+          '<path d="M400 214a18 18 0 0 1 18 18c0 13.5-18 33-18 33s-18-19.5-18-33a18 18 0 0 1 18-18z" fill="#d97706"/>' +
           '<circle cx="400" cy="232" r="7" fill="#fff"/>' +
-          '<text x="400" y="330" font-family="Plus Jakarta Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#60a5fa" text-anchor="middle">Offset Plumbing</text>' +
+          '<text x="400" y="330" font-family="Plus Jakarta Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#f59e0b" text-anchor="middle">Offset Plumbing</text>' +
           '<text x="400" y="358" font-family="Plus Jakarta Sans,Arial,sans-serif" font-size="14" fill="rgba(255,255,255,.55)" text-anchor="middle">' + label + '</text>' +
           '</svg>';
         img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);

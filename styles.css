@@ -12,13 +12,13 @@
   --border:  rgba(255,255,255,.08);
   --border-hi: rgba(255,255,255,.16);
 
-  /* Brand blue */
-  --blue:    #2563eb;
-  --blue-hi: #3b82f6;
-  --blue-lt: rgba(37,99,235,.18);
-  --blue-gl: rgba(37,99,235,.08);
+  /* Primary — copper / amber (pipe-and-fixture palette) */
+  --blue:    #b45309;   /* rich copper — primary actions */
+  --blue-hi: #d97706;   /* warm amber — hover / highlights */
+  --blue-lt: rgba(180,83,9,.18);
+  --blue-gl: rgba(180,83,9,.08);
 
-  /* Copper / amber — pipes, fixtures */
+  /* Extended copper / amber */
   --copper:  #c2640a;
   --amber:   #d97706;
   --amber-lt: rgba(217,119,6,.18);
@@ -34,7 +34,7 @@
   --sh-sm: 0 2px 12px rgba(0,0,0,.35);
   --sh-md: 0 8px 40px rgba(0,0,0,.45);
   --sh-lg: 0 20px 70px rgba(0,0,0,.6);
-  --sh-blue: 0 8px 28px rgba(37,99,235,.35);
+  --sh-blue: 0 8px 28px rgba(180,83,9,.4);
   --sh-copper: 0 8px 28px rgba(194,100,10,.3);
 
   --r:    12px;
@@ -92,14 +92,14 @@ html.js img.loaded { opacity: 1; }
   transition: transform .3s var(--ease), box-shadow .3s, background .2s, color .2s, border-color .2s;
 }
 .btn--primary {
-  background: var(--blue); color: #fff; box-shadow: var(--sh-blue);
+  background: linear-gradient(135deg, var(--copper) 0%, var(--amber) 100%); color: var(--bg-0); box-shadow: var(--sh-blue);
 }
 .btn--primary::after {
   content:""; position:absolute; inset:0;
   background: linear-gradient(120deg,transparent 0%,rgba(255,255,255,.22) 50%,transparent 100%);
   transform: translateX(-130%); transition: transform .65s var(--ease);
 }
-.btn--primary:hover { background: var(--blue-hi); transform: translateY(-2px); box-shadow: 0 14px 38px rgba(37,99,235,.5); }
+.btn--primary:hover { background: var(--copper); transform: translateY(-2px); box-shadow: 0 14px 38px rgba(180,83,9,.55); }
 .btn--primary:hover::after { transform: translateX(130%); }
 
 .btn--copper {
@@ -112,6 +112,9 @@ html.js img.loaded { opacity: 1; }
 
 .btn--ghost { background: var(--bg-3); color: var(--text); border-color: var(--border); }
 .btn--ghost:hover { background: var(--bg-4); border-color: var(--border-hi); color: var(--white); }
+
+.btn--ghost-blue { background: var(--bg-3); color: var(--amber); border-color: rgba(180,83,9,.35); }
+.btn--ghost-blue:hover { background: var(--bg-4); border-color: var(--amber); color: var(--gold); }
 
 .btn--sm  { padding: .6rem 1.1rem; font-size: .87rem; }
 .btn--lg  { padding: 1rem 2rem; font-size: 1.05rem; }
@@ -182,13 +185,13 @@ html.js img.loaded { opacity: 1; }
 .hero::before {
   content:""; position:absolute; right:-200px; top:-150px;
   width:700px; height:700px; border-radius:50%;
-  background: radial-gradient(circle, rgba(37,99,235,.12) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(180,83,9,.14) 0%, transparent 65%);
   pointer-events:none;
 }
 .hero::after {
   content:""; position:absolute; left:-100px; bottom:-100px;
   width:500px; height:500px; border-radius:50%;
-  background: radial-gradient(circle, rgba(194,100,10,.07) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(217,119,6,.09) 0%, transparent 65%);
   pointer-events:none;
 }
 .hero__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; position: relative; z-index: 1; }
@@ -425,7 +428,7 @@ html.js img.loaded { opacity: 1; }
 .footer__disc { font-style: italic; max-width: 480px; }
 
 /* ---------- Float call ---------- */
-.float-call { position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 90; display: flex; align-items: center; gap: .45rem; background: var(--blue); color: #fff; font-family: var(--font); font-weight: 700; font-size: .88rem; padding: .78rem 1.25rem; border-radius: 100px; box-shadow: 0 8px 28px rgba(37,99,235,.5); opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .4s var(--ease), transform .4s var(--ease), box-shadow .3s; }
+.float-call { position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 90; display: flex; align-items: center; gap: .45rem; background: var(--amber); color: var(--bg-0); font-family: var(--font); font-weight: 800; font-size: .88rem; padding: .78rem 1.25rem; border-radius: 100px; box-shadow: 0 8px 28px rgba(180,83,9,.55); opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .4s var(--ease), transform .4s var(--ease), box-shadow .3s; }
 .float-call.is-visible { opacity: 1; transform: none; pointer-events: auto; }
 .float-call:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(37,99,235,.65); }
 
