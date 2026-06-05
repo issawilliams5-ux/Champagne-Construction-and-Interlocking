@@ -1,13 +1,36 @@
 (function () {
   "use strict";
 
-  /* ---------- Sticky header shadow ---------- */
+  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Parallax (Apple-style depth on scroll) ---------- */
+  var parallaxEls = Array.prototype.slice.call(document.querySelectorAll("[data-parallax]"));
+  var ticking = false;
+  function applyParallax() {
+    var vh = window.innerHeight;
+    parallaxEls.forEach(function (el) {
+      var host = el.parentElement;
+      var rect = host.getBoundingClientRect();
+      if (rect.bottom < -300 || rect.top > vh + 300) return;
+      var speed = parseFloat(el.getAttribute("data-parallax")) || 0.1;
+      var mid = rect.top + rect.height / 2 - vh / 2;
+      el.style.transform = "translate3d(0," + (-mid * speed).toFixed(1) + "px,0) scale(1.16)";
+    });
+    ticking = false;
+  }
+
+  /* ---------- Sticky header shadow + parallax driver ---------- */
   var header = document.getElementById("header");
   function onScroll() {
-    if (!header) return;
-    header.classList.toggle("scrolled", window.scrollY > 24);
+    if (header) header.classList.toggle("scrolled", window.scrollY > 24);
+    if (!prefersReduced && parallaxEls.length && !ticking) {
+      ticking = true;
+      window.requestAnimationFrame(applyParallax);
+    }
   }
   window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", function () { if (!prefersReduced) applyParallax(); }, { passive: true });
+  if (!prefersReduced) applyParallax();
   onScroll();
 
   /* ---------- Mobile menu ---------- */
