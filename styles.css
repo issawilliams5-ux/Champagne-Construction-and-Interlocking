@@ -456,6 +456,110 @@ html.reveal-ready .reveal.is-visible { opacity: 1; transform: none; }
 .services__grid .reveal:nth-child(3), .why__grid .reveal:nth-child(3), .process__list .reveal:nth-child(3) { transition-delay: .16s; }
 .services__grid .reveal:nth-child(4), .why__grid .reveal:nth-child(4), .process__list .reveal:nth-child(4) { transition-delay: .24s; }
 
+/* ---------- Enhanced animations ---------- */
+
+/* Staggered reveals for grid children */
+.services__grid .reveal, .why__grid .reveal, .process__list .reveal,
+.reviews__grid .reveal, .work__grid .reveal, .areas__list li, .hero__trust li {
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+html.reveal-ready .services__grid > .reveal:nth-child(n),
+html.reveal-ready .why__grid > .reveal:nth-child(n),
+html.reveal-ready .process__list > .reveal:nth-child(n),
+html.reveal-ready .reviews__grid > .reveal:nth-child(n) { transition-delay: 0s; }
+html.reveal-ready .reveal:nth-child(1) { transition-delay: .04s; }
+html.reveal-ready .reveal:nth-child(2) { transition-delay: .12s; }
+html.reveal-ready .reveal:nth-child(3) { transition-delay: .20s; }
+html.reveal-ready .reveal:nth-child(4) { transition-delay: .28s; }
+html.reveal-ready .reveal:nth-child(5) { transition-delay: .36s; }
+html.reveal-ready .reveal:nth-child(6) { transition-delay: .44s; }
+html.reveal-ready .reveal:nth-child(7) { transition-delay: .52s; }
+html.reveal-ready .reveal:nth-child(8) { transition-delay: .60s; }
+
+/* Hero entrance: line-by-line cinematic rise */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__content > * { animation: heroRise 1.05s var(--ease) both; }
+  .hero .eyebrow      { animation-delay: .15s; }
+  .hero__title        { animation-delay: .30s; }
+  .hero__sub          { animation-delay: .50s; }
+  .hero__cta          { animation-delay: .68s; }
+  .hero__trust        { animation-delay: .86s; }
+}
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(40px); filter: blur(6px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* Trust stats count-up shimmer underline */
+.hero__trust li { position: relative; }
+.hero__trust strong::after {
+  content: ""; position: absolute; left: 0; bottom: -.4rem; height: 2px; width: 0;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  animation: trustLine 1.2s var(--ease) forwards; animation-delay: 1.1s;
+}
+@keyframes trustLine { to { width: 70%; } }
+
+/* Primary button: glossy shine sweep on hover */
+.btn--primary { position: relative; overflow: hidden; isolation: isolate; }
+.btn--primary::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.55) 50%, transparent 100%);
+  transform: translateX(-130%); transition: transform .7s var(--ease);
+}
+.btn--primary:hover::before { transform: translateX(130%); }
+
+/* Eyebrow: animated leading line */
+.eyebrow { position: relative; padding-left: 2.6rem; }
+.eyebrow::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 2rem; height: 1.5px;
+  background: var(--gold); transform-origin: left; transform: scaleX(0);
+  transition: transform .6s var(--ease) .2s;
+}
+.section__head--left .eyebrow, .interlude .eyebrow, .areas .eyebrow,
+.contact .eyebrow { padding-left: 2.6rem; }
+html.reveal-ready .reveal .eyebrow::before { transform: scaleX(0); }
+html.reveal-ready .reveal.is-visible .eyebrow::before,
+.hero .eyebrow::before { transform: scaleX(1); }
+
+/* Section titles: gentle gradient sweep on reveal */
+.section__title { background-size: 100%; }
+
+/* Service / feature / step lift gets a soft glow */
+.svc:hover { box-shadow: 0 26px 60px rgba(15,28,20,.22); }
+.feat:hover, .step:hover { box-shadow: 0 20px 50px rgba(0,0,0,.28); }
+
+/* Gallery tiles rise + scale on reveal */
+html.reveal-ready .work__grid .tile { opacity: 0; transform: translateY(28px) scale(.97); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+html.reveal-ready .work__grid.in-view .tile { opacity: 1; transform: none; }
+html.reveal-ready .work__grid.in-view .tile:nth-child(2) { transition-delay: .06s; }
+html.reveal-ready .work__grid.in-view .tile:nth-child(3) { transition-delay: .12s; }
+html.reveal-ready .work__grid.in-view .tile:nth-child(4) { transition-delay: .18s; }
+html.reveal-ready .work__grid.in-view .tile:nth-child(5) { transition-delay: .24s; }
+html.reveal-ready .work__grid.in-view .tile:nth-child(6) { transition-delay: .30s; }
+html.reveal-ready .work__grid.in-view .tile:nth-child(n+7) { transition-delay: .36s; }
+
+/* Nav brand mark subtle pulse on load */
+.brand__mark { transition: transform .5s var(--ease), box-shadow .5s; }
+.brand:hover .brand__mark { transform: rotate(-6deg) scale(1.06); box-shadow: 0 8px 22px rgba(201,169,106,.5); }
+
+/* FAQ open animation */
+.qa p { animation: qaFade .4s var(--ease); }
+@keyframes qaFade { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+/* Chip active pop */
+.chip { transition: transform .25s var(--ease), background .35s, color .35s, border-color .35s; }
+.chip:active { transform: scale(.94); }
+.chip.is-active { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15,28,20,.25); }
+
+/* Float CTA gentle attention pulse */
+@media (prefers-reduced-motion: no-preference) {
+  .float-cta.is-visible { animation: ctaPulse 2.6s ease-in-out infinite; }
+}
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 14px 34px rgba(201,169,106,.45); }
+  50% { box-shadow: 0 14px 44px rgba(201,169,106,.75); }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 980px) {
   .nav__links, .nav__phone { display: none; }

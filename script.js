@@ -57,8 +57,20 @@
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
     revealEls.forEach(function (el) { io.observe(el); });
+
+    var grid = document.getElementById("workGrid");
+    if (grid) {
+      var gio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { grid.classList.add("in-view"); gio.unobserve(grid); }
+        });
+      }, { threshold: 0.1 });
+      gio.observe(grid);
+    }
   } else {
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
+    var g = document.getElementById("workGrid");
+    if (g) g.classList.add("in-view");
   }
 
   /* ---- Portfolio filtering ---- */
