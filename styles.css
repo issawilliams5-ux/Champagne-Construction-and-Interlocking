@@ -557,3 +557,13 @@ h1, h2, h3, h4 {
   .split__badge { right: 12px; }
   .logo__name { font-size: 1.05rem; }
 }
+
+/* Honeypot — hidden from humans, catches bots */
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}

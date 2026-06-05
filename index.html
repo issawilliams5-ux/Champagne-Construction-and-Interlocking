@@ -549,7 +549,12 @@
           </ul>
         </div>
 
-        <form class="contact__form reveal" data-reveal id="contactForm" action="/api/contact" method="POST" novalidate>
+        <form class="contact__form reveal" data-reveal id="contactForm" action="https://api.web3forms.com/submit" method="POST" novalidate>
+          <input type="hidden" name="access_key" value="26458bee-5fd4-48cc-809b-e5bf79ebd918" />
+          <input type="hidden" name="subject" value="New enquiry from Bailey Church website" />
+          <input type="hidden" name="from_name" value="Bailey Church Website" />
+          <!-- Honeypot: bots fill this, humans never see it -->
+          <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <h3>Send an enquiry</h3>
           <div class="field">
             <label for="fname">Full Name</label>

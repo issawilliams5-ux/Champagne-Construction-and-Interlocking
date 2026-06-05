@@ -76,7 +76,7 @@
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
-  /* ---------- Contact form (posts to /api/contact → Resend email) ---------- */
+  /* ---------- Contact form (posts to Web3Forms → emails bailey@ignitedbybailey.ca) ---------- */
   var form = document.getElementById("contactForm");
   var note = document.getElementById("formNote");
   if (form) {
@@ -97,31 +97,40 @@
         return;
       }
 
+      var org = (form.querySelector("#forg") || {}).value || "";
+      var topic = (form.querySelector("#ftopic") || {}).value || "";
+      var msg = (form.querySelector("#fmsg") || {}).value || "";
+
+      // Web3Forms reads the access_key + standard field names from the form.
       var payload = {
-        fname: name.value.trim(),
-        femail: email.value.trim(),
-        forg: (form.querySelector("#forg") || {}).value || "",
-        ftopic: (form.querySelector("#ftopic") || {}).value || "",
-        fmsg: (form.querySelector("#fmsg") || {}).value || ""
+        access_key: (form.querySelector("[name=access_key]") || {}).value || "",
+        subject: (form.querySelector("[name=subject]") || {}).value || "New website enquiry",
+        from_name: (form.querySelector("[name=from_name]") || {}).value || "Website",
+        botcheck: "",
+        name: name.value.trim(),
+        email: email.value.trim(),
+        organization: org,
+        topic: topic,
+        message: msg
       };
 
       if (submitBtn) { submitBtn.disabled = true; }
       setNote("Sending your enquiry…", false);
 
-      fetch(form.getAttribute("action") || "/api/contact", {
+      fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify(payload)
       })
         .then(function (res) {
           return res.json().then(function (data) { return { ok: res.ok, data: data }; });
         })
         .then(function (result) {
-          if (result.ok) {
-            setNote("Thank you, " + payload.fname.split(" ")[0] + ". Your enquiry has been sent.", true);
+          if (result.ok && result.data && result.data.success) {
+            setNote("Thank you, " + payload.name.split(" ")[0] + ". Your enquiry has been sent.", true);
             form.reset();
           } else {
-            setNote((result.data && result.data.error) || "Something went wrong. Please try again.", false);
+            setNote((result.data && result.data.message) || "Something went wrong. Please try again.", false);
           }
         })
         .catch(function () {
