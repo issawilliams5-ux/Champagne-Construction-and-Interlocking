@@ -76,26 +76,60 @@
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
-  /* ---------- Contact form (no backend — graceful demo) ---------- */
+  /* ---------- Contact form (posts to /api/contact → Resend email) ---------- */
   var form = document.getElementById("contactForm");
   var note = document.getElementById("formNote");
   if (form) {
+    var submitBtn = form.querySelector("button[type=submit]");
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var name = form.querySelector("#fname");
       var email = form.querySelector("#femail");
+
+      function setNote(msg, success) {
+        if (!note) return;
+        note.textContent = msg;
+        note.classList.toggle("is-success", !!success);
+      }
+
       if (!name.value.trim() || !email.value.trim()) {
-        if (note) {
-          note.textContent = "Please add your name and email so I can respond.";
-          note.classList.remove("is-success");
-        }
+        setNote("Please add your name and email so I can respond.", false);
         return;
       }
-      if (note) {
-        note.textContent = "Thank you, " + name.value.trim().split(" ")[0] + ". Your enquiry has been noted.";
-        note.classList.add("is-success");
-      }
-      form.reset();
+
+      var payload = {
+        fname: name.value.trim(),
+        femail: email.value.trim(),
+        forg: (form.querySelector("#forg") || {}).value || "",
+        ftopic: (form.querySelector("#ftopic") || {}).value || "",
+        fmsg: (form.querySelector("#fmsg") || {}).value || ""
+      };
+
+      if (submitBtn) { submitBtn.disabled = true; }
+      setNote("Sending your enquiry…", false);
+
+      fetch(form.getAttribute("action") || "/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(function (res) {
+          return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+        })
+        .then(function (result) {
+          if (result.ok) {
+            setNote("Thank you, " + payload.fname.split(" ")[0] + ". Your enquiry has been sent.", true);
+            form.reset();
+          } else {
+            setNote((result.data && result.data.error) || "Something went wrong. Please try again.", false);
+          }
+        })
+        .catch(function () {
+          setNote("Network error — please try again, or email bailey@ignitedbybailey.ca directly.", false);
+        })
+        .then(function () {
+          if (submitBtn) { submitBtn.disabled = false; }
+        });
     });
   }
 
