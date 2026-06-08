@@ -21,11 +21,16 @@
 
   /* ---------- Sticky header shadow + parallax driver ---------- */
   var header = document.getElementById("header");
+  var scrollProgressEl = document.getElementById("scrollProgress");
   function onScroll() {
     if (header) header.classList.toggle("scrolled", window.scrollY > 24);
     if (!prefersReduced && parallaxEls.length && !ticking) {
       ticking = true;
       window.requestAnimationFrame(applyParallax);
+    }
+    if (scrollProgressEl) {
+      var scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      scrollProgressEl.style.width = scrolled.toFixed(1) + "%";
     }
   }
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -74,6 +79,86 @@
     revealEls.forEach(function (el) { io.observe(el); });
   } else {
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
+  }
+
+  /* ---------- Animated stat counters ---------- */
+  var statEls = document.querySelectorAll(".stat strong");
+  if ("IntersectionObserver" in window && statEls.length) {
+    var statIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        statIo.unobserve(el);
+        var raw = el.textContent.trim();
+        var suffix = raw.replace(/[\d]/g, "");
+        var num = parseInt(raw.replace(/\D/g, ""), 10);
+        // Year stat (2006) — just flash, no count-up
+        if (raw === "2006") {
+          el.classList.add("counted");
+          return;
+        }
+        if (isNaN(num)) { el.classList.add("counted"); return; }
+        var start = null;
+        var duration = 1800;
+        function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+        function step(ts) {
+          if (!start) start = ts;
+          var elapsed = ts - start;
+          var progress = Math.min(elapsed / duration, 1);
+          var current = Math.round(easeOut(progress) * num);
+          el.textContent = current + suffix;
+          if (progress < 1) {
+            window.requestAnimationFrame(step);
+          } else {
+            el.textContent = num + suffix;
+            el.classList.add("counted");
+          }
+        }
+        window.requestAnimationFrame(step);
+      });
+    }, { threshold: 0.5 });
+    statEls.forEach(function (el) { statIo.observe(el); });
+  }
+
+  /* ---------- Card magnetic tilt ---------- */
+  var tiltCards = document.querySelectorAll(".exp-card, .event-cat");
+  tiltCards.forEach(function (card) {
+    var rafId = null;
+    var pendingRx = 0, pendingRy = 0;
+
+    card.addEventListener("mousemove", function (e) {
+      var rect = card.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+      var dx = (e.clientX - cx) / (rect.width / 2);
+      var dy = (e.clientY - cy) / (rect.height / 2);
+      pendingRx = (-dy * 8).toFixed(2);
+      pendingRy = (dx * 8).toFixed(2);
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(function () {
+          card.style.setProperty("--rx", pendingRx + "deg");
+          card.style.setProperty("--ry", pendingRy + "deg");
+          rafId = null;
+        });
+      }
+    });
+
+    card.addEventListener("mouseenter", function () {
+      card.style.setProperty("--ty", "-6px");
+    });
+
+    card.addEventListener("mouseleave", function () {
+      card.style.setProperty("--rx", "0deg");
+      card.style.setProperty("--ry", "0deg");
+      card.style.setProperty("--ty", "0px");
+      if (rafId) { window.cancelAnimationFrame(rafId); rafId = null; }
+    });
+  });
+
+  /* ---------- Marquee — disable when prefers-reduced-motion ---------- */
+  if (prefersReduced) {
+    var marqueeTrack = document.querySelector(".marquee-track");
+    if (marqueeTrack) marqueeTrack.style.animationPlayState = "paused";
   }
 
   /* ---------- Contact form (posts to Web3Forms → emails bailey@ignitedbybailey.ca) ---------- */

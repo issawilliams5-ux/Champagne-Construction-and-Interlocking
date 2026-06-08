@@ -241,14 +241,14 @@
     </section>
 
     <!-- ===== ESG FEATURE ===== -->
-    <section class="section esg" id="esg">
+    <section class="section esg section--clip-top" id="esg">
       <div class="container split__inner split__inner--rev">
-        <div class="split__media reveal" data-reveal>
+        <div class="split__media reveal" data-reveal="right">
           <div class="split__img-frame">
             <img loading="lazy" data-parallax="0.06" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=82" alt="Sunlit forest path — natural assets and environmental stewardship" width="900" height="1080" />
           </div>
         </div>
-        <div class="split__copy reveal" data-reveal>
+        <div class="split__copy reveal" data-reveal="left">
           <span class="chip-label">ESG &amp; Sustainability</span>
           <h2>Leading sustainability reporting for the public sector</h2>
           <p class="lead">
@@ -278,7 +278,7 @@
     <!-- ===== CAREER TIMELINE ===== -->
     <section class="section career bg-soft" id="career">
       <div class="container">
-        <div class="section-head reveal" data-reveal>
+        <div class="section-head reveal" data-reveal="scale">
           <span class="chip-label">Career Path</span>
           <h2>Three decades across practice, government, and assurance</h2>
           <p>A trajectory spanning leading professional services firms and federal public-sector institutions.</p>
@@ -329,9 +329,9 @@
     </section>
 
     <!-- ===== TEACHING ===== -->
-    <section class="section teaching bg-dark" id="teaching">
+    <section class="section teaching bg-dark section--clip-top" id="teaching">
       <div class="container split__inner">
-        <div class="split__copy reveal" data-reveal>
+        <div class="split__copy reveal" data-reveal="left">
           <span class="chip-label chip-label--light">Teaching &amp; Academia</span>
           <h2>Educator across Canada's leading institutions</h2>
           <p class="lead">
@@ -348,7 +348,7 @@
             <div class="uni-pill">Queen's Advanced Accounting Program</div>
           </div>
         </div>
-        <div class="split__media reveal" data-reveal>
+        <div class="split__media reveal" data-reveal="right">
           <div class="split__img-frame">
             <img loading="lazy" data-parallax="0.06" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=900&q=82" alt="University lecture hall — academic teaching at Queen's, Ottawa, Carleton, and Nipissing" width="900" height="1080" />
           </div>
@@ -359,7 +359,7 @@
     <!-- ===== PROFESSIONAL SERVICE ===== -->
     <section class="section service" id="service">
       <div class="container">
-        <div class="section-head reveal" data-reveal>
+        <div class="section-head reveal" data-reveal="scale">
           <span class="chip-label">Professional Service &amp; Governance</span>
           <h2>Service to the profession and the community</h2>
           <p>Governance, standard-setting, and professional roles spanning accounting bodies and public institutions.</p>
@@ -396,21 +396,25 @@
     <!-- ===== SPEAKING ===== -->
     <section class="section speaking bg-soft" id="speaking">
       <div class="container">
-        <div class="section-head reveal" data-reveal>
+        <div class="section-head reveal" data-reveal="scale">
           <span class="chip-label">Speaking &amp; Visibility</span>
           <h2>A recognized voice on trust, stewardship, and ESG</h2>
           <p>A well-known speaker across Canada on public-sector financial challenges, sustainability, and stewardship.</p>
         </div>
-        <div class="speak-marquee reveal" data-reveal>
-          <span>Government Finance Officers Association</span>
-          <span class="speak-dot" aria-hidden="true">◆</span>
-          <span>Institute of Internal Auditors</span>
-          <span class="speak-dot" aria-hidden="true">◆</span>
-          <span>Financial Management Institute</span>
-          <span class="speak-dot" aria-hidden="true">◆</span>
-          <span>Canadian Comprehensive Auditing Foundation</span>
-          <span class="speak-dot" aria-hidden="true">◆</span>
-          <span>Office of the Auditor General</span>
+        <div class="marquee-wrap reveal" data-reveal>
+          <div class="marquee-track">
+            <span class="speak-item">Government Finance Officers Association</span><span class="speak-dot" aria-hidden="true">◆</span>
+            <span class="speak-item">Institute of Internal Auditors</span><span class="speak-dot" aria-hidden="true">◆</span>
+            <span class="speak-item">Financial Management Institute</span><span class="speak-dot" aria-hidden="true">◆</span>
+            <span class="speak-item">Canadian Comprehensive Auditing Foundation</span><span class="speak-dot" aria-hidden="true">◆</span>
+            <span class="speak-item">Office of the Auditor General</span><span class="speak-dot" aria-hidden="true">◆</span>
+            <!-- duplicate for seamless loop -->
+            <span class="speak-item">Government Finance Officers Association</span><span class="speak-dot" aria-hidden="true">◆</span>
+            <span class="speak-item">Institute of Internal Auditors</span><span class="speak-dot" aria-hidden="true">◆</span>
+            <span class="speak-item">Financial Management Institute</span><span class="speak-dot" aria-hidden="true">◆</span>
+            <span class="speak-item">Canadian Comprehensive Auditing Foundation</span><span class="speak-dot" aria-hidden="true">◆</span>
+            <span class="speak-item">Office of the Auditor General</span><span class="speak-dot" aria-hidden="true">◆</span>
+          </div>
         </div>
         <blockquote class="pull-quote reveal" data-reveal>
           <p>"Bailey Church, FCPA, FCA, CIA, is an Ottawa-based Big Four partner and Queen's University lecturer specializing in public-sector accounting, ESG reporting, sustainability assurance, and government financial stewardship."</p>
@@ -419,9 +423,9 @@
     </section>
 
     <!-- ===== EVENTS / MASTER INDEX ===== -->
-    <section class="section events bg-dark" id="events">
+    <section class="section events bg-dark section--clip-top" id="events">
       <div class="container">
-        <div class="section-head section-head--light reveal" data-reveal>
+        <div class="section-head section-head--light reveal" data-reveal="scale">
           <span class="chip-label chip-label--light">Master Index</span>
           <h2>Events, presentations &amp; appearances</h2>
           <p>Over a career spanning more than 25 years, Bailey has worked with over 300 governments on asset retirement obligations and environmental roadmaps. A compiled index of his international forums, national seminars, natural-asset work, and professional training events follows.</p>
