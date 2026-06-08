@@ -457,6 +457,63 @@
     });
   }
 
+  /* ---------- LinkedIn carousel ---------- */
+  var liTrack = document.getElementById("liTrack");
+  var liViewport = document.getElementById("liViewport");
+  if (liTrack && liViewport) {
+    var liSlides = liTrack.querySelectorAll(".li-slide");
+    var liCount = liSlides.length;
+    var liIndex = 0;
+    var liDots = document.getElementById("liDots");
+    var liAuto = null;
+
+    function liGo(i) {
+      liIndex = (i + liCount) % liCount;
+      liTrack.style.transform = "translateX(" + (-liIndex * 100) + "%)";
+      if (liDots) {
+        liDots.querySelectorAll("button").forEach(function (d, di) {
+          d.classList.toggle("is-active", di === liIndex);
+        });
+      }
+    }
+
+    function restartAuto() {
+      if (liAuto) { window.clearInterval(liAuto); liAuto = null; }
+      if (!prefersReduced) { liAuto = window.setInterval(function () { liGo(liIndex + 1); }, 6000); }
+    }
+
+    if (liDots) {
+      for (var li = 0; li < liCount; li++) {
+        (function (idx) {
+          var b = document.createElement("button");
+          b.setAttribute("aria-label", "Go to post " + (idx + 1));
+          b.addEventListener("click", function () { liGo(idx); restartAuto(); });
+          liDots.appendChild(b);
+        })(li);
+      }
+    }
+
+    var liPrev = document.getElementById("liPrev");
+    var liNext = document.getElementById("liNext");
+    liPrev && liPrev.addEventListener("click", function () { liGo(liIndex - 1); restartAuto(); });
+    liNext && liNext.addEventListener("click", function () { liGo(liIndex + 1); restartAuto(); });
+
+    liViewport.addEventListener("mouseenter", function () { if (liAuto) { window.clearInterval(liAuto); liAuto = null; } });
+    liViewport.addEventListener("mouseleave", restartAuto);
+
+    var liStartX = 0, liDragging = false;
+    liViewport.addEventListener("touchstart", function (e) { liStartX = e.touches[0].clientX; liDragging = true; }, { passive: true });
+    liViewport.addEventListener("touchend", function (e) {
+      if (!liDragging) return;
+      liDragging = false;
+      var dx = e.changedTouches[0].clientX - liStartX;
+      if (Math.abs(dx) > 40) { liGo(liIndex + (dx < 0 ? 1 : -1)); restartAuto(); }
+    }, { passive: true });
+
+    liGo(0);
+    restartAuto();
+  }
+
   /* ---------- Footer year ---------- */
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
