@@ -157,8 +157,11 @@ h1, h2, h3, h4 {
   background: var(--green-900);
   display: flex; flex-direction: column; justify-content: center;
   padding: 40px; gap: 30px;
+  transform: translateX(100%);
+  transition: transform .5s cubic-bezier(.22,.61,.36,1);
 }
-.mobile-menu[hidden] { display: none; }
+.mobile-menu.is-open { transform: translateX(0); }
+.mobile-menu[hidden] { display: flex !important; visibility: hidden; pointer-events: none; }
 .mobile-menu__close {
   position: absolute; top: 24px; right: 28px;
   background: none; border: none; color: var(--cream);
@@ -168,7 +171,18 @@ h1, h2, h3, h4 {
 .mobile-menu nav a {
   font-family: var(--serif); font-size: 1.9rem; color: var(--cream);
   padding: 6px 0; border-bottom: 1px solid var(--line-dark);
+  opacity: 0; transform: translateX(30px);
+  transition: opacity .4s ease, transform .4s cubic-bezier(.22,.61,.36,1), color .25s;
 }
+.mobile-menu.is-open nav a { opacity: 1; transform: none; }
+.mobile-menu.is-open nav a:nth-child(1) { transition-delay: .1s; }
+.mobile-menu.is-open nav a:nth-child(2) { transition-delay: .16s; }
+.mobile-menu.is-open nav a:nth-child(3) { transition-delay: .22s; }
+.mobile-menu.is-open nav a:nth-child(4) { transition-delay: .28s; }
+.mobile-menu.is-open nav a:nth-child(5) { transition-delay: .34s; }
+.mobile-menu.is-open nav a:nth-child(6) { transition-delay: .40s; }
+.mobile-menu.is-open nav a:nth-child(7) { transition-delay: .46s; }
+.mobile-menu.is-open nav a:nth-child(8) { transition-delay: .52s; }
 .mobile-menu nav a:hover { color: var(--gold); }
 
 /* ---------- Hero ---------- */
@@ -189,7 +203,8 @@ h1, h2, h3, h4 {
     radial-gradient(120% 90% at 80% 10%, rgba(200,169,106,.12), transparent 60%);
 }
 .hero__inner { position: relative; z-index: 2; padding-top: 40px; padding-bottom: 60px; }
-.hero__copy { max-width: 720px; }
+.hero__copy { max-width: 720px; transition: transform .8s cubic-bezier(.22,.61,.36,1); }
+.hero__bg { transition: transform .8s cubic-bezier(.22,.61,.36,1); }
 
 .badge {
   display: inline-flex; align-items: center; gap: 10px;
@@ -354,10 +369,14 @@ h1, h2, h3, h4 {
   list-style: none; margin: 0 auto; padding: 0; max-width: 760px;
   position: relative;
 }
-.timeline::before {
-  content: ""; position: absolute; left: 11px; top: 8px; bottom: 8px;
-  width: 2px; background: linear-gradient(var(--gold), rgba(200,169,106,.15));
+.timeline__line {
+  position: absolute; left: 11px; top: 8px;
+  width: 2px; height: 0%;
+  background: linear-gradient(var(--gold), rgba(200,169,106,.15));
+  transition: height 2s cubic-bezier(.22,.61,.36,1);
+  z-index: 0;
 }
+.timeline__line.is-drawn { height: calc(100% - 16px); }
 .timeline__item { position: relative; padding: 0 0 38px 52px; }
 .timeline__item:last-child { padding-bottom: 0; }
 .timeline__dot {
@@ -712,3 +731,95 @@ h1, h2, h3, h4 {
   opacity: 0;
   pointer-events: none;
 }
+
+/* ---------- Preloader ---------- */
+#preloader {
+  position: fixed; inset: 0; z-index: 999;
+  background: #07150f;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+  transition: opacity .6s ease .1s;
+}
+#preloader.hide { opacity: 0; pointer-events: none; }
+.preloader__logo {
+  width: 72px; height: 72px; border-radius: 18px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #d9c194, #a8854a);
+  color: #07150f;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 700; font-size: 1.9rem; letter-spacing: 1px;
+  box-shadow: 0 0 60px rgba(200,169,106,.4);
+  animation: preloaderPulse 1.4s ease infinite alternate;
+}
+@keyframes preloaderPulse { from { box-shadow: 0 0 30px rgba(200,169,106,.3); } to { box-shadow: 0 0 80px rgba(200,169,106,.7); } }
+.preloader__bar {
+  width: 160px; height: 1px; background: rgba(200,169,106,.2); border-radius: 1px; overflow: hidden;
+}
+.preloader__fill {
+  height: 100%; width: 0%; background: linear-gradient(90deg, #a8854a, #d9c194, #a8854a);
+  border-radius: 1px;
+  animation: preloaderLoad 1.4s cubic-bezier(.22,.61,.36,1) forwards;
+}
+@keyframes preloaderLoad { to { width: 100%; } }
+
+/* ---------- Custom cursor ---------- */
+@media (hover: hover) and (pointer: fine) {
+  body { cursor: none; }
+  a, button, [role="button"] { cursor: none; }
+}
+#cursor-dot {
+  position: fixed; z-index: 9998; pointer-events: none;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold);
+  transform: translate(-50%, -50%);
+  transition: transform .1s ease, opacity .3s, background .3s;
+  opacity: 0;
+}
+#cursor-ring {
+  position: fixed; z-index: 9997; pointer-events: none;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid rgba(200,169,106,.6);
+  transform: translate(-50%, -50%);
+  transition: width .3s ease, height .3s ease, border-color .3s, opacity .3s;
+  opacity: 0;
+}
+#cursor-ring.is-hovering {
+  width: 56px; height: 56px;
+  border-color: var(--gold);
+  background: rgba(200,169,106,.06);
+}
+
+/* ---------- Split text hero animation ---------- */
+.word-wrap { display: inline-block; overflow: hidden; vertical-align: bottom; }
+.word {
+  display: inline-block;
+  transform: translateY(110%) skewY(4deg);
+  opacity: 0;
+  transition: transform .9s cubic-bezier(.22,.61,.36,1), opacity .9s ease;
+}
+.word--in { transform: none; opacity: 1; }
+
+/* ---------- Active nav highlight ---------- */
+.nav a.nav__active { color: var(--gold-soft) !important; }
+.nav a.nav__active::after { width: 100% !important; background: var(--gold-soft); }
+
+/* ---------- Hero canvas particles ---------- */
+#heroCanvas {
+  position: absolute; inset: 0; z-index: 1;
+  width: 100%; height: 100%;
+  pointer-events: none; opacity: .55;
+}
+
+/* ---------- Section entrance numbers ---------- */
+[data-section-num] { position: relative; overflow: hidden; }
+[data-section-num]::before {
+  content: attr(data-section-num);
+  position: absolute; right: -20px; top: -40px;
+  font-family: var(--serif); font-size: clamp(140px, 18vw, 220px);
+  font-weight: 700; line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(200,169,106,.07);
+  text-stroke: 1px rgba(200,169,106,.07);
+  pointer-events: none; user-select: none; z-index: 0;
+  letter-spacing: -4px;
+}
+.bg-soft[data-section-num]::before { -webkit-text-stroke: 1px rgba(10,31,22,.05); }

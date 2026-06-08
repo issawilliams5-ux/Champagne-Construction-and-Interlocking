@@ -3,6 +3,62 @@
 
   var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------- Preloader ---------- */
+  var preloader = document.getElementById("preloader");
+  if (preloader && !prefersReduced) {
+    document.body.style.overflow = "hidden";
+    setTimeout(function () {
+      preloader.classList.add("hide");
+      document.body.style.overflow = "";
+      setTimeout(function () { preloader.style.display = "none"; }, 700);
+    }, 1600);
+  } else if (preloader) {
+    preloader.style.display = "none";
+  }
+
+  /* ---------- Custom cursor ---------- */
+  var cursorDot = document.getElementById("cursor-dot");
+  var cursorRing = document.getElementById("cursor-ring");
+  if (cursorDot && cursorRing && window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
+    var cx = 0, cy = 0, rx = 0, ry = 0;
+    document.addEventListener("mousemove", function(e) {
+      cx = e.clientX; cy = e.clientY;
+      cursorDot.style.left = cx + "px";
+      cursorDot.style.top = cy + "px";
+      cursorDot.style.opacity = "1";
+      cursorRing.style.opacity = "1";
+    });
+    (function animateRing() {
+      rx += (cx - rx) * 0.12;
+      ry += (cy - ry) * 0.12;
+      cursorRing.style.left = rx + "px";
+      cursorRing.style.top = ry + "px";
+      requestAnimationFrame(animateRing);
+    })();
+    document.querySelectorAll("a, button, .btn, .exp-card, .event-cat").forEach(function(el) {
+      el.addEventListener("mouseenter", function() { cursorRing.classList.add("is-hovering"); cursorDot.style.transform = "translate(-50%,-50%) scale(2)"; });
+      el.addEventListener("mouseleave", function() { cursorRing.classList.remove("is-hovering"); cursorDot.style.transform = "translate(-50%,-50%) scale(1)"; });
+    });
+    document.addEventListener("mouseleave", function() { cursorDot.style.opacity = "0"; cursorRing.style.opacity = "0"; });
+  }
+
+  /* ---------- Split-text hero animation ---------- */
+  function splitTextReveal() {
+    var h1 = document.querySelector(".hero__title");
+    if (!h1 || prefersReduced) return;
+    var text = h1.textContent.trim();
+    var words = text.split(" ");
+    h1.innerHTML = words.map(function(w) {
+      return '<span class="word-wrap"><span class="word">' + w + '</span></span>';
+    }).join(" ");
+    setTimeout(function() {
+      h1.querySelectorAll(".word").forEach(function(w, i) {
+        setTimeout(function() { w.classList.add("word--in"); }, i * 120);
+      });
+    }, 200);
+  }
+  setTimeout(splitTextReveal, prefersReduced ? 0 : 1700);
+
   /* ---------- Parallax (Apple-style depth on scroll) ---------- */
   var parallaxEls = Array.prototype.slice.call(document.querySelectorAll("[data-parallax]"));
   var ticking = false;
@@ -46,14 +102,18 @@
   function openMenu() {
     if (!menu) return;
     menu.hidden = false;
+    // force reflow
+    menu.offsetHeight;
+    menu.classList.add("is-open");
     toggle && toggle.setAttribute("aria-expanded", "true");
     document.body.style.overflow = "hidden";
   }
   function closeMenu() {
     if (!menu) return;
-    menu.hidden = true;
+    menu.classList.remove("is-open");
     toggle && toggle.setAttribute("aria-expanded", "false");
     document.body.style.overflow = "";
+    setTimeout(function() { if (!menu.classList.contains("is-open")) menu.hidden = true; }, 500);
   }
 
   toggle && toggle.addEventListener("click", openMenu);
@@ -79,6 +139,120 @@
     revealEls.forEach(function (el) { io.observe(el); });
   } else {
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
+  }
+
+  /* ---------- Active nav highlight ---------- */
+  var navLinks = document.querySelectorAll(".nav a[href^='#']");
+  var allSections = Array.prototype.slice.call(document.querySelectorAll("main section[id]"));
+  if (navLinks.length && allSections.length) {
+    var navIo = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var id = entry.target.id;
+          navLinks.forEach(function(a) {
+            a.classList.toggle("nav__active", a.getAttribute("href") === "#" + id);
+          });
+        }
+      });
+    }, { threshold: 0.35 });
+    allSections.forEach(function(s) { navIo.observe(s); });
+  }
+
+  /* ---------- Hero canvas particles ---------- */
+  var canvas = document.getElementById("heroCanvas");
+  if (canvas && !prefersReduced) {
+    var ctx = canvas.getContext("2d");
+    var particles = [];
+    var PARTICLE_COUNT = 55;
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas, { passive: true });
+    for (var i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.6 + 0.3,
+        vx: (Math.random() - .5) * .35,
+        vy: -(Math.random() * .5 + .15),
+        alpha: Math.random() * .5 + .1,
+        life: Math.random()
+      });
+    }
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(function(p) {
+        p.x += p.vx; p.y += p.vy; p.life += 0.003;
+        if (p.y < -10 || p.life > 1) {
+          p.x = Math.random() * canvas.width;
+          p.y = canvas.height + 10;
+          p.life = 0;
+        }
+        var fade = p.life < .1 ? p.life / .1 : p.life > .85 ? (1 - p.life) / .15 : 1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(200,169,106," + (p.alpha * fade).toFixed(2) + ")";
+        ctx.fill();
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+  }
+
+  /* ---------- Hero mouse parallax ---------- */
+  var heroSection = document.querySelector(".hero");
+  var heroCopy = document.querySelector(".hero__copy");
+  var heroBg = document.querySelector(".hero__bg");
+  if (heroSection && heroCopy && heroBg && !prefersReduced) {
+    heroSection.addEventListener("mousemove", function(e) {
+      var rect = heroSection.getBoundingClientRect();
+      var mx = (e.clientX - rect.left) / rect.width - .5;
+      var my = (e.clientY - rect.top) / rect.height - .5;
+      heroCopy.style.transform = "translate(" + (mx * 12).toFixed(1) + "px," + (my * 8).toFixed(1) + "px)";
+      heroBg.style.transform = "translate(" + (-mx * 18).toFixed(1) + "px," + (-my * 12).toFixed(1) + "px)";
+    });
+    heroSection.addEventListener("mouseleave", function() {
+      heroCopy.style.transform = "";
+      heroBg.style.transform = "";
+    });
+  }
+
+  /* ---------- Smooth scroll ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+    anchor.addEventListener("click", function(e) {
+      var target = document.querySelector(this.getAttribute("href"));
+      if (!target) return;
+      e.preventDefault();
+      var targetY = target.getBoundingClientRect().top + window.scrollY - 80;
+      var startY = window.scrollY;
+      var diff = targetY - startY;
+      var startTime = null;
+      var duration = Math.min(Math.abs(diff) * 0.6, 1200);
+      if (prefersReduced) { window.scrollTo(0, targetY); return; }
+      function ease(t) { return t < .5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1; }
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var elapsed = ts - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        window.scrollTo(0, startY + diff * ease(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  });
+
+  /* ---------- Timeline draw animation ---------- */
+  var timelineLine = document.querySelector(".timeline__line");
+  if (timelineLine) {
+    var tlIo = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        timelineLine.classList.add("is-drawn");
+        tlIo.disconnect();
+      }
+    }, { threshold: 0.1 });
+    tlIo.observe(timelineLine.parentElement);
   }
 
   /* ---------- Animated stat counters ---------- */
