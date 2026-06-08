@@ -40,8 +40,65 @@
     "description": "Ottawa-based public-sector accounting and ESG advisory leader, FCPA, FCA, CIA. National leader in public-sector accounting advisory and sustainability assurance.",
     "alumniOf": { "@type": "CollegeOrUniversity", "name": "Queen's University" },
     "address": { "@type": "PostalAddress", "addressLocality": "Ottawa", "addressRegion": "ON", "addressCountry": "CA" },
-    "knowsAbout": ["Public Sector Accounting","ESG Reporting","Sustainability Assurance","Government Financial Stewardship","Internal Audit","Financial Reporting"]
+    "knowsAbout": ["Public Sector Accounting","ESG Reporting","Sustainability Assurance","Government Financial Stewardship","Internal Audit","Financial Reporting"],
+    "knowsLanguage": ["en","fr"],
+    "nationality": { "@type": "Country", "name": "Canada" },
+    "hasCredential": [
+      { "@type": "EducationalOccupationalCredential", "credentialCategory": "Professional Designation", "name": "FCPA — Fellow Chartered Professional Accountant", "recognizedBy": { "@type": "Organization", "name": "CPA Ontario" } },
+      { "@type": "EducationalOccupationalCredential", "credentialCategory": "Professional Designation", "name": "FCA — Fellow Chartered Accountant", "recognizedBy": { "@type": "Organization", "name": "CPA Ontario" } },
+      { "@type": "EducationalOccupationalCredential", "credentialCategory": "Professional Designation", "name": "CIA — Certified Internal Auditor", "recognizedBy": { "@type": "Organization", "name": "Institute of Internal Auditors" } }
+    ]
   }
+  </script>
+
+  <!-- FAQ structured data — MUST stay in sync with the visible FAQ section text -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What type of advisory work do you focus on?",
+        "acceptedAnswer": { "@type": "Answer", "text": "My practice centres on public-sector accounting, financial reporting, ESG and sustainability disclosure, sustainability assurance, and internal audit — serving governments, crown corporations, municipalities, universities, and not-for-profits across Canada." }
+      },
+      {
+        "@type": "Question",
+        "name": "Who do you typically work with?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Engagements span the Government of Canada, provincial and territorial governments, crown corporations, municipalities, school boards, hospitals, universities, and for-profit entities involved in public-sector transactions." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can you help with ESG and sustainability reporting?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. As Leader of a Public Sector ESG & Climate Reporting Centre of Expertise, I advise on adapting International Sustainability Standards Board guidance for the public sector, asset retirement obligations, natural asset valuation, and credible sustainability disclosure and assurance." }
+      },
+      {
+        "@type": "Question",
+        "name": "What geographic areas do you cover?",
+        "acceptedAnswer": { "@type": "Answer", "text": "My work is national in scope across Canada, with international engagements through UNCTAD ISAR forums and global sustainability reporting initiatives." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you take on speaking and teaching engagements?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. I am a frequent speaker at national public-finance forums and have lectured at Queen's University, the University of Ottawa, Carleton University, and Nipissing University." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I start a consultation?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Reach out through the contact form on this site with a short description of your organization and your needs. Enquiries are reviewed personally and typically begin with a discovery conversation to scope the engagement." }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google Analytics 4 — TODO: replace G-XXXXXXXXXX with the real GA4 Measurement ID before publishing. -->
+  <!-- With the placeholder ID, gtag loads harmlessly and sends no usable data; it will not throw errors. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
   </script>
 </head>
 <body>
@@ -70,6 +127,7 @@
         <a href="#esg">ESG &amp; Sustainability</a>
         <a href="#career">Career</a>
         <a href="#teaching">Teaching</a>
+        <a href="#testimonials">Testimonials</a>
         <a href="#events">Events</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -90,7 +148,9 @@
       <a href="#career">Career</a>
       <a href="#teaching">Teaching</a>
       <a href="#service">Professional Service</a>
-      <a href="#events">Events</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#insights">Insights</a>
+      <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
     </nav>
     <a href="#contact" class="btn btn--gold btn--block">Get in Touch</a>
@@ -124,6 +184,10 @@
           <div class="hero__ctas reveal" data-reveal style="transition-delay:0.4s">
             <a href="#contact" class="btn btn--gold btn--lg">Request a Consultation</a>
             <a href="#expertise" class="btn btn--ghost btn--lg">Explore Expertise</a>
+          </div>
+          <div class="availability reveal" data-reveal="fade" style="transition-delay:0.5s">
+            <span class="availability__dot" aria-hidden="true"></span>
+            Available for select engagements
           </div>
         </div>
       </div>
@@ -188,12 +252,49 @@
             <li>Certified Internal Auditor (CIA)</li>
             <li>Partner, Accounting Advisory Services — Big Four firm</li>
           </ul>
+          <!-- TODO: link href to a real downloadable profile/media-kit PDF before publishing -->
+          <a class="media-kit-link" href="#" download>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Download Profile (PDF)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SELECTED ENGAGEMENTS / IMPACT ===== -->
+    <!-- NOTE: Engagement highlights below are illustrative and anonymized; real client names are confidential. -->
+    <section class="section engagements bg-soft" id="engagements" data-section-num="01">
+      <div class="container">
+        <div class="section-head reveal" data-reveal="scale">
+          <span class="chip-label">Selected Engagements</span>
+          <h2>Illustrative impact across the public sector</h2>
+          <p>Anonymized highlights representative of advisory work delivered for governments and public institutions. Real client identities remain confidential.</p>
+        </div>
+        <div class="engagement-grid">
+          <article class="engagement-card reveal" data-reveal="left">
+            <span class="engagement-card__tag">Asset Retirement Obligations</span>
+            <h3>ARO rollout across a provincial portfolio</h3>
+            <p>Designed and implemented an asset retirement obligation framework spanning hundreds of public assets, aligning policy, valuation, and disclosure with public-sector standards.</p>
+            <div class="engagement-card__metric"><strong>300+</strong><span>assets assessed &amp; recognized</span></div>
+          </article>
+          <article class="engagement-card reveal" data-reveal>
+            <span class="engagement-card__tag">ESG Disclosure</span>
+            <h3>ESG disclosure roadmap for a federal crown corporation</h3>
+            <p>Built a multi-year sustainability disclosure roadmap adapting International Sustainability Standards Board guidance to the realities of a federal crown corporation.</p>
+            <div class="engagement-card__metric"><strong>3yr</strong><span>phased disclosure roadmap</span></div>
+          </article>
+          <article class="engagement-card reveal" data-reveal="right">
+            <span class="engagement-card__tag">Natural Assets</span>
+            <h3>Natural asset valuation framework for a municipal coalition</h3>
+            <p>Developed a defensible natural asset valuation and reporting approach enabling a coalition of municipalities to recognize ecosystem services in their planning.</p>
+            <div class="engagement-card__metric"><strong>12+</strong><span>municipalities engaged</span></div>
+          </article>
         </div>
       </div>
     </section>
 
     <!-- ===== EXPERTISE ===== -->
-    <section class="section expertise bg-dark section--clip-top" id="expertise" data-section-num="01">
+    <section class="section expertise bg-dark section--clip-top" id="expertise" data-section-num="02">
       <div class="container">
         <div class="section-head section-head--light reveal" data-reveal="scale">
           <span class="chip-label chip-label--light">Areas of Expertise</span>
@@ -248,7 +349,7 @@
     </section>
 
     <!-- ===== ESG FEATURE ===== -->
-    <section class="section esg section--clip-top" id="esg" data-section-num="02">
+    <section class="section esg section--clip-top" id="esg" data-section-num="03">
       <div class="container split__inner split__inner--rev">
         <div class="split__media reveal" data-reveal="right">
           <div class="split__img-frame">
@@ -283,7 +384,7 @@
     </section>
 
     <!-- ===== CAREER TIMELINE ===== -->
-    <section class="section career bg-soft" id="career" data-section-num="03">
+    <section class="section career bg-soft" id="career" data-section-num="04">
       <div class="container">
         <div class="section-head reveal" data-reveal="scale">
           <span class="chip-label">Career Path</span>
@@ -337,7 +438,7 @@
     </section>
 
     <!-- ===== TEACHING ===== -->
-    <section class="section teaching bg-dark section--clip-top" id="teaching" data-section-num="04">
+    <section class="section teaching bg-dark section--clip-top" id="teaching" data-section-num="05">
       <div class="container split__inner">
         <div class="split__copy reveal" data-reveal="left">
           <span class="chip-label chip-label--light">Teaching &amp; Academia</span>
@@ -364,8 +465,46 @@
       </div>
     </section>
 
+    <!-- ===== INSIGHTS / THOUGHT LEADERSHIP ===== -->
+    <!-- TODO: Replace placeholder "#" article links with real published articles / newsletter issues before publishing. -->
+    <section class="section insights bg-soft" id="insights" data-section-num="06">
+      <div class="container">
+        <div class="section-head reveal" data-reveal="scale">
+          <span class="chip-label">Insights</span>
+          <h2>Thought leadership for public-sector finance</h2>
+          <p>Perspectives drawn from the Public Sector Accounting Minute newsletter, distributed to over 25,000 public-sector finance leaders, and from national webcasts.</p>
+        </div>
+        <div class="insight-grid">
+          <article class="insight-card reveal" data-reveal>
+            <span class="insight-card__tag">Asset Retirement Obligations</span>
+            <h3>Getting ahead of AROs in the public sector</h3>
+            <p>Practical steps for identifying, measuring, and disclosing asset retirement obligations before they become a reporting surprise.</p>
+            <a class="insight-card__link" href="#">Read<span aria-hidden="true"> →</span></a>
+          </article>
+          <article class="insight-card reveal" data-reveal>
+            <span class="insight-card__tag">ISSB</span>
+            <h3>Adapting ISSB standards for governments</h3>
+            <p>How public institutions can translate International Sustainability Standards Board guidance into credible, decision-useful disclosure.</p>
+            <a class="insight-card__link" href="#">Read<span aria-hidden="true"> →</span></a>
+          </article>
+          <article class="insight-card reveal" data-reveal>
+            <span class="insight-card__tag">Natural Asset Management</span>
+            <h3>Putting nature on the balance sheet</h3>
+            <p>Why natural asset management is reshaping municipal planning and how to build a defensible valuation approach.</p>
+            <a class="insight-card__link" href="#">Read<span aria-hidden="true"> →</span></a>
+          </article>
+          <article class="insight-card reveal" data-reveal>
+            <span class="insight-card__tag">Sustainability Assurance</span>
+            <h3>Building trust through assurance</h3>
+            <p>What credible sustainability assurance looks like for the public sector — and how to prepare your organization for it.</p>
+            <a class="insight-card__link" href="#">Read<span aria-hidden="true"> →</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== PROFESSIONAL SERVICE ===== -->
-    <section class="section service" id="service" data-section-num="05">
+    <section class="section service" id="service" data-section-num="07">
       <div class="container">
         <div class="section-head reveal" data-reveal="scale">
           <span class="chip-label">Professional Service &amp; Governance</span>
@@ -401,8 +540,122 @@
       </div>
     </section>
 
+    <!-- ===== ENGAGEMENT MODEL / HOW WE WORK TOGETHER ===== -->
+    <section class="section engagement-model bg-dark section--clip-top" id="engagement-model" data-section-num="08">
+      <div class="container">
+        <div class="section-head section-head--light reveal" data-reveal="scale">
+          <span class="chip-label chip-label--light">How We Work Together</span>
+          <h2>A clear, structured engagement model</h2>
+          <p>Every engagement follows a deliberate path — from understanding your context to delivering durable, audit-ready outcomes.</p>
+        </div>
+        <ol class="process">
+          <div class="process__line" aria-hidden="true"></div>
+          <li class="process__step reveal" data-reveal>
+            <span class="process__num">01</span>
+            <h3>Discovery &amp; Scoping</h3>
+            <p>We begin with a focused conversation to understand your mandate, stakeholders, timelines, and the outcomes that matter most.</p>
+          </li>
+          <li class="process__step reveal" data-reveal>
+            <span class="process__num">02</span>
+            <h3>Technical Assessment</h3>
+            <p>A rigorous review of your current position against applicable standards, identifying gaps, risks, and the most defensible path forward.</p>
+          </li>
+          <li class="process__step reveal" data-reveal>
+            <span class="process__num">03</span>
+            <h3>Advisory &amp; Implementation</h3>
+            <p>Hands-on guidance to design policy, build frameworks, and implement changes — translating standards into practical, working processes.</p>
+          </li>
+          <li class="process__step reveal" data-reveal>
+            <span class="process__num">04</span>
+            <h3>Ongoing Assurance</h3>
+            <p>Continued support to keep your reporting credible and audit-ready as standards, expectations, and your organization evolve.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <!-- NOTE: These Q&As must stay in sync with the FAQPage JSON-LD in <head>. -->
+    <section class="section faq" id="faq" data-section-num="09">
+      <div class="container faq__inner">
+        <div class="section-head reveal" data-reveal="scale">
+          <span class="chip-label">FAQ</span>
+          <h2>Frequently asked questions</h2>
+          <p>Answers to common questions about advisory focus, who I work with, and how to begin.</p>
+        </div>
+        <div class="accordion reveal" data-reveal>
+          <div class="accordion__item">
+            <h3 class="accordion__heading">
+              <button type="button" class="accordion__btn" aria-expanded="false" aria-controls="faq-panel-1" id="faq-btn-1">
+                <span>What type of advisory work do you focus on?</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="accordion__panel" id="faq-panel-1" role="region" aria-labelledby="faq-btn-1">
+              <div class="accordion__panel-inner"><p>My practice centres on public-sector accounting, financial reporting, ESG and sustainability disclosure, sustainability assurance, and internal audit — serving governments, crown corporations, municipalities, universities, and not-for-profits across Canada.</p></div>
+            </div>
+          </div>
+          <div class="accordion__item">
+            <h3 class="accordion__heading">
+              <button type="button" class="accordion__btn" aria-expanded="false" aria-controls="faq-panel-2" id="faq-btn-2">
+                <span>Who do you typically work with?</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="accordion__panel" id="faq-panel-2" role="region" aria-labelledby="faq-btn-2">
+              <div class="accordion__panel-inner"><p>Engagements span the Government of Canada, provincial and territorial governments, crown corporations, municipalities, school boards, hospitals, universities, and for-profit entities involved in public-sector transactions.</p></div>
+            </div>
+          </div>
+          <div class="accordion__item">
+            <h3 class="accordion__heading">
+              <button type="button" class="accordion__btn" aria-expanded="false" aria-controls="faq-panel-3" id="faq-btn-3">
+                <span>Can you help with ESG and sustainability reporting?</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="accordion__panel" id="faq-panel-3" role="region" aria-labelledby="faq-btn-3">
+              <div class="accordion__panel-inner"><p>Yes. As Leader of a Public Sector ESG &amp; Climate Reporting Centre of Expertise, I advise on adapting International Sustainability Standards Board guidance for the public sector, asset retirement obligations, natural asset valuation, and credible sustainability disclosure and assurance.</p></div>
+            </div>
+          </div>
+          <div class="accordion__item">
+            <h3 class="accordion__heading">
+              <button type="button" class="accordion__btn" aria-expanded="false" aria-controls="faq-panel-4" id="faq-btn-4">
+                <span>What geographic areas do you cover?</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="accordion__panel" id="faq-panel-4" role="region" aria-labelledby="faq-btn-4">
+              <div class="accordion__panel-inner"><p>My work is national in scope across Canada, with international engagements through UNCTAD ISAR forums and global sustainability reporting initiatives.</p></div>
+            </div>
+          </div>
+          <div class="accordion__item">
+            <h3 class="accordion__heading">
+              <button type="button" class="accordion__btn" aria-expanded="false" aria-controls="faq-panel-5" id="faq-btn-5">
+                <span>Do you take on speaking and teaching engagements?</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="accordion__panel" id="faq-panel-5" role="region" aria-labelledby="faq-btn-5">
+              <div class="accordion__panel-inner"><p>Yes. I am a frequent speaker at national public-finance forums and have lectured at Queen's University, the University of Ottawa, Carleton University, and Nipissing University.</p></div>
+            </div>
+          </div>
+          <div class="accordion__item">
+            <h3 class="accordion__heading">
+              <button type="button" class="accordion__btn" aria-expanded="false" aria-controls="faq-panel-6" id="faq-btn-6">
+                <span>How do I start a consultation?</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="accordion__panel" id="faq-panel-6" role="region" aria-labelledby="faq-btn-6">
+              <div class="accordion__panel-inner"><p>Reach out through the contact form on this site with a short description of your organization and your needs. Enquiries are reviewed personally and typically begin with a discovery conversation to scope the engagement.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== SPEAKING ===== -->
-    <section class="section speaking bg-soft" id="speaking" data-section-num="06">
+    <section class="section speaking bg-soft" id="speaking" data-section-num="10">
       <div class="container">
         <div class="section-head reveal" data-reveal="scale">
           <span class="chip-label">Speaking &amp; Visibility</span>
@@ -430,8 +683,43 @@
       </div>
     </section>
 
+    <!-- ===== TESTIMONIALS / CLIENT VOICES ===== -->
+    <!-- TODO: Replace placeholder testimonials with real, attributable client quotes before publishing -->
+    <section class="section testimonials" id="testimonials" data-section-num="11">
+      <div class="container">
+        <div class="section-head reveal" data-reveal="scale">
+          <span class="chip-label">Client Voices</span>
+          <h2>Trusted by leaders across the public sector</h2>
+          <p>Representative feedback reflecting the nature of the advisory relationships built with public-sector clients. Quotes below are placeholders pending attributable approvals.</p>
+        </div>
+        <div class="testimonial-grid">
+          <figure class="testimonial-card reveal" data-reveal="left">
+            <blockquote>His technical depth on public-sector standards is matched by a genuine understanding of how government actually works. The ARO framework he built gave us confidence going into audit.</blockquote>
+            <figcaption class="testimonial-card__by">
+              <span class="testimonial-card__name">Senior Finance Director</span>
+              <span class="testimonial-card__role">Municipal Government</span>
+            </figcaption>
+          </figure>
+          <figure class="testimonial-card reveal" data-reveal>
+            <blockquote>He translated complex ISSB guidance into a roadmap our board could understand and act on. Clear, credible, and patient throughout the engagement.</blockquote>
+            <figcaption class="testimonial-card__by">
+              <span class="testimonial-card__name">Chief Financial Officer</span>
+              <span class="testimonial-card__role">Federal Crown Corporation</span>
+            </figcaption>
+          </figure>
+          <figure class="testimonial-card reveal" data-reveal="right">
+            <blockquote>The natural asset valuation work changed how our council thinks about infrastructure. A rare advisor who is as comfortable with the standards as with the politics.</blockquote>
+            <figcaption class="testimonial-card__by">
+              <span class="testimonial-card__name">Director of Finance</span>
+              <span class="testimonial-card__role">Regional Municipal Coalition</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== EVENTS / MASTER INDEX ===== -->
-    <section class="section events bg-dark section--clip-top" id="events" data-section-num="07">
+    <section class="section events bg-dark section--clip-top" id="events" data-section-num="12">
       <div class="container">
         <div class="section-head section-head--light reveal" data-reveal="scale">
           <span class="chip-label chip-label--light">Master Index</span>
@@ -552,12 +840,16 @@
     </section>
 
     <!-- ===== CONTACT ===== -->
-    <section class="section contact bg-dark" id="contact" data-section-num="08">
+    <section class="section contact bg-dark" id="contact" data-section-num="13">
       <div class="container contact__inner">
         <div class="contact__left reveal" data-reveal>
           <span class="chip-label chip-label--light">Get in Touch</span>
           <h2>Begin a conversation</h2>
           <p>For consultation, speaking, teaching, or advisory enquiries related to public-sector accounting, ESG reporting, and sustainability assurance.</p>
+          <div class="availability availability--light">
+            <span class="availability__dot" aria-hidden="true"></span>
+            Available for select engagements
+          </div>
           <ul class="contact-details">
             <li>
               <div class="contact-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg></div>
@@ -648,7 +940,9 @@
           <li><a href="#about">About</a></li>
           <li><a href="#career">Career</a></li>
           <li><a href="#teaching">Teaching</a></li>
-          <li><a href="#service">Professional Service</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#insights">Insights</a></li>
+          <li><a href="#faq">FAQ</a></li>
         </ul>
       </div>
       <div class="footer__col">
@@ -665,6 +959,11 @@
       <p class="footer__disc">Informational profile website concept for presentation purposes.</p>
     </div>
   </footer>
+
+  <!-- Back to top -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top" type="button">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
 
   <script src="script.js" defer></script>
 </body>

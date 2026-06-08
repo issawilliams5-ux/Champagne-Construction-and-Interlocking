@@ -35,7 +35,7 @@
       cursorRing.style.top = ry + "px";
       requestAnimationFrame(animateRing);
     })();
-    document.querySelectorAll("a, button, .btn, .exp-card, .event-cat").forEach(function(el) {
+    document.querySelectorAll("a, button, .btn, .exp-card, .event-cat, .engagement-card, .insight-card, .testimonial-card").forEach(function(el) {
       el.addEventListener("mouseenter", function() { cursorRing.classList.add("is-hovering"); cursorDot.style.transform = "translate(-50%,-50%) scale(2)"; });
       el.addEventListener("mouseleave", function() { cursorRing.classList.remove("is-hovering"); cursorDot.style.transform = "translate(-50%,-50%) scale(1)"; });
     });
@@ -78,8 +78,10 @@
   /* ---------- Sticky header shadow + parallax driver ---------- */
   var header = document.getElementById("header");
   var scrollProgressEl = document.getElementById("scrollProgress");
+  var backToTop = document.getElementById("backToTop");
   function onScroll() {
     if (header) header.classList.toggle("scrolled", window.scrollY > 24);
+    if (backToTop) backToTop.classList.toggle("is-visible", window.scrollY > 600);
     if (!prefersReduced && parallaxEls.length && !ticking) {
       ticking = true;
       window.requestAnimationFrame(applyParallax);
@@ -398,6 +400,60 @@
         .then(function () {
           if (submitBtn) { submitBtn.disabled = false; }
         });
+    });
+  }
+
+  /* ---------- FAQ accordion (single-open, keyboard accessible) ---------- */
+  var accordion = document.querySelector(".accordion");
+  if (accordion) {
+    var accBtns = Array.prototype.slice.call(accordion.querySelectorAll(".accordion__btn"));
+
+    function setPanel(btn, open) {
+      var panel = document.getElementById(btn.getAttribute("aria-controls"));
+      if (!panel) return;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      } else {
+        panel.style.maxHeight = "0px";
+      }
+    }
+
+    accBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var isOpen = btn.getAttribute("aria-expanded") === "true";
+        // single-open: close all others
+        accBtns.forEach(function (other) { if (other !== btn) setPanel(other, false); });
+        setPanel(btn, !isOpen);
+      });
+    });
+
+    // Keep open panels sized correctly on resize
+    window.addEventListener("resize", function () {
+      accBtns.forEach(function (btn) {
+        if (btn.getAttribute("aria-expanded") === "true") {
+          var panel = document.getElementById(btn.getAttribute("aria-controls"));
+          if (panel) panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+      });
+    }, { passive: true });
+  }
+
+  /* ---------- Back to top ---------- */
+  if (backToTop) {
+    backToTop.addEventListener("click", function () {
+      if (prefersReduced) { window.scrollTo(0, 0); return; }
+      var startY = window.scrollY;
+      var startTime = null;
+      var duration = Math.min(startY * 0.6, 1200);
+      function ease(t) { return t < .5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1; }
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var progress = Math.min((ts - startTime) / duration, 1);
+        window.scrollTo(0, startY * (1 - ease(progress)));
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
     });
   }
 
