@@ -45,6 +45,7 @@
   </script>
 </head>
 <body>
+  <div id="scrollProgress"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- HEADER -->
@@ -99,21 +100,21 @@
       </div>
       <div class="container hero__inner">
         <div class="hero__copy">
-          <div class="badge reveal" data-reveal>
+          <div class="badge reveal" data-reveal="fade">
             <span class="badge__dot" aria-hidden="true"></span>
             Big Four · Ottawa, Ontario
           </div>
-          <h1 class="hero__title reveal" data-reveal>
+          <h1 class="hero__title reveal text-shimmer" data-reveal>
             Bailey Church
           </h1>
-          <p class="hero__creds reveal" data-reveal>FCPA &nbsp;·&nbsp; FCA &nbsp;·&nbsp; CIA</p>
-          <p class="hero__lead reveal" data-reveal>
+          <p class="hero__creds reveal" data-reveal style="transition-delay:0.1s">FCPA &nbsp;·&nbsp; FCA &nbsp;·&nbsp; CIA</p>
+          <p class="hero__lead reveal" data-reveal style="transition-delay:0.2s">
             Public-sector accounting, ESG reporting, sustainability assurance, and government financial stewardship.
           </p>
-          <p class="hero__body reveal" data-reveal>
+          <p class="hero__body reveal" data-reveal style="transition-delay:0.3s">
             National Leader of a Big Four firm's Public Sector Accounting Advisory practice and Leader of the Public Sector ESG &amp; Climate Reporting Centre of Expertise — advising governments, crown corporations, and public institutions across Canada for more than 25 years.
           </p>
-          <div class="hero__ctas reveal" data-reveal>
+          <div class="hero__ctas reveal" data-reveal style="transition-delay:0.4s">
             <a href="#contact" class="btn btn--gold btn--lg">Request a Consultation</a>
             <a href="#expertise" class="btn btn--ghost btn--lg">Explore Expertise</a>
           </div>
@@ -153,7 +154,7 @@
     <!-- ===== ABOUT ===== -->
     <section class="section about" id="about">
       <div class="container split__inner">
-        <div class="split__media reveal" data-reveal>
+        <div class="split__media reveal" data-reveal="left">
           <div class="split__img-frame split__img-frame--portrait">
             <img loading="lazy" data-parallax="0.05" src="assets/bailey-church.jpg" alt="Bailey Church, FCPA, FCA, CIA — Ottawa-based public-sector accounting and ESG advisory leader" width="1536" height="1536" />
           </div>
@@ -162,7 +163,7 @@
             <strong>FCPA, FCA</strong>
           </div>
         </div>
-        <div class="split__copy reveal" data-reveal>
+        <div class="split__copy reveal" data-reveal="right">
           <span class="chip-label">About</span>
           <h2>A career devoted to public trust and financial stewardship</h2>
           <p class="lead">
@@ -185,15 +186,15 @@
     </section>
 
     <!-- ===== EXPERTISE ===== -->
-    <section class="section expertise bg-dark" id="expertise">
+    <section class="section expertise bg-dark section--clip-top" id="expertise">
       <div class="container">
-        <div class="section-head section-head--light reveal" data-reveal>
+        <div class="section-head section-head--light reveal" data-reveal="scale">
           <span class="chip-label chip-label--light">Areas of Expertise</span>
           <h2>Specialized advisory for the public sector</h2>
           <p>Trusted by governments and public institutions for technical depth across accounting, audit, and sustainability.</p>
         </div>
         <div class="expertise-grid">
-          <article class="exp-card reveal" data-reveal>
+          <article class="exp-card reveal" data-reveal="left">
             <div class="exp-card__ico" aria-hidden="true">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 14l4-4 3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
@@ -207,14 +208,14 @@
             <h3>Auditing &amp; Internal Audit</h3>
             <p>Assurance and internal audit leadership shaped by senior roles at Export Development Canada and the Communications Security Establishment.</p>
           </article>
-          <article class="exp-card reveal" data-reveal>
+          <article class="exp-card reveal" data-reveal="right">
             <div class="exp-card__ico" aria-hidden="true">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
             </div>
             <h3>ESG &amp; Sustainability Reporting</h3>
             <p>Adapting International Sustainability Standards Board guidance for the public sector and advising governments on credible sustainability disclosure.</p>
           </article>
-          <article class="exp-card reveal" data-reveal>
+          <article class="exp-card reveal" data-reveal="left">
             <div class="exp-card__ico" aria-hidden="true">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M8 4v16" stroke="currentColor" stroke-width="2"/></svg>
             </div>
@@ -228,7 +229,7 @@
             <h3>Government Advisory</h3>
             <p>Advising the Government of Canada, provinces, and municipalities on public-sector transactions and accounting policy.</p>
           </article>
-          <article class="exp-card reveal" data-reveal>
+          <article class="exp-card reveal" data-reveal="right">
             <div class="exp-card__ico" aria-hidden="true">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 5-3.4 7.7-8 9-4.6-1.3-8-4-8-9V7l8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
             </div>
