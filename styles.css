@@ -786,11 +786,12 @@ h1, h2, h3, h4 {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
   position: relative;
 }
-.process__line {
-  position: absolute; top: 32px; left: 12%; right: 12%; height: 1px;
+.process::before {
+  content: ""; position: absolute; top: 32px; left: 12%; right: 12%; height: 1px;
   background: linear-gradient(90deg, rgba(200,169,106,.1), rgba(200,169,106,.5), rgba(200,169,106,.1));
-  z-index: 0;
+  pointer-events: none;
 }
+.process__line { display: none; }
 .process__step {
   position: relative; z-index: 1;
   background: linear-gradient(160deg, rgba(200,169,106,.07), rgba(255,255,255,.012));
