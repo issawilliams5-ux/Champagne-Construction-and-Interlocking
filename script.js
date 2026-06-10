@@ -35,9 +35,9 @@
       cursorRing.style.top = ry + "px";
       requestAnimationFrame(animateRing);
     })();
-    document.querySelectorAll("a, button, .btn, .exp-card, .event-cat, .engagement-card, .insight-card, .testimonial-card").forEach(function(el) {
-      el.addEventListener("mouseenter", function() { cursorRing.classList.add("is-hovering"); cursorDot.style.transform = "translate(-50%,-50%) scale(2)"; });
-      el.addEventListener("mouseleave", function() { cursorRing.classList.remove("is-hovering"); cursorDot.style.transform = "translate(-50%,-50%) scale(1)"; });
+    document.querySelectorAll("a, button, .btn, .exp-card, .event-cat, .engagement-card, .insight-card, .testimonial-card, .li-card, .service-card").forEach(function(el) {
+      el.addEventListener("mouseenter", function() { cursorRing.classList.add("is-hovering"); cursorDot.style.transform = "translate(-50%,-50%) scale(2.5)"; cursorDot.style.background = "#dcc898"; });
+      el.addEventListener("mouseleave", function() { cursorRing.classList.remove("is-hovering"); cursorDot.style.transform = "translate(-50%,-50%) scale(1)"; cursorDot.style.background = ""; });
     });
     document.addEventListener("mouseleave", function() { cursorDot.style.opacity = "0"; cursorRing.style.opacity = "0"; });
   }
@@ -165,7 +165,7 @@
   if (canvas && !prefersReduced) {
     var ctx = canvas.getContext("2d");
     var particles = [];
-    var PARTICLE_COUNT = 55;
+    var PARTICLE_COUNT = 65;
     function resizeCanvas() {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
@@ -176,26 +176,39 @@
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: Math.random() * 1.6 + 0.3,
-        vx: (Math.random() - .5) * .35,
-        vy: -(Math.random() * .5 + .15),
-        alpha: Math.random() * .5 + .1,
-        life: Math.random()
+        r: Math.random() * 2.2 + 0.4,
+        vx: (Math.random() - .5) * .3,
+        vy: -(Math.random() * .55 + .12),
+        alpha: Math.random() * .6 + .1,
+        life: Math.random(),
+        glow: Math.random() > 0.6
       });
     }
     function drawParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(function(p) {
-        p.x += p.vx; p.y += p.vy; p.life += 0.003;
+        p.x += p.vx; p.y += p.vy; p.life += 0.0028;
         if (p.y < -10 || p.life > 1) {
           p.x = Math.random() * canvas.width;
           p.y = canvas.height + 10;
           p.life = 0;
+          p.glow = Math.random() > 0.6;
         }
-        var fade = p.life < .1 ? p.life / .1 : p.life > .85 ? (1 - p.life) / .15 : 1;
+        var fade = p.life < .12 ? p.life / .12 : p.life > .82 ? (1 - p.life) / .18 : 1;
+        var a = (p.alpha * fade);
+        if (p.glow && a > 0.05) {
+          var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3.5);
+          grad.addColorStop(0, "rgba(220,200,140," + (a * 0.9).toFixed(3) + ")");
+          grad.addColorStop(0.4, "rgba(200,169,106," + (a * 0.5).toFixed(3) + ")");
+          grad.addColorStop(1, "rgba(200,169,106,0)");
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r * 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+        }
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(200,169,106," + (p.alpha * fade).toFixed(2) + ")";
+        ctx.fillStyle = "rgba(200,169,106," + a.toFixed(2) + ")";
         ctx.fill();
       });
       requestAnimationFrame(drawParticles);
@@ -297,7 +310,7 @@
   }
 
   /* ---------- Card magnetic tilt ---------- */
-  var tiltCards = document.querySelectorAll(".exp-card, .event-cat");
+  var tiltCards = document.querySelectorAll(".exp-card, .event-cat, .process__step");
   tiltCards.forEach(function (card) {
     var rafId = null;
     var pendingRx = 0, pendingRy = 0;
