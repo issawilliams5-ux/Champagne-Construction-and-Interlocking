@@ -8,14 +8,23 @@
   var hasGsap = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 
+  /* CRITICAL: the page scrolls inside #scroll-container, not the window.
+     Every ScrollTrigger must watch the container or snap/scrub never fire. */
+  var scroller = document.getElementById("scroll-container");
+  if (hasGsap && scroller) {
+    ScrollTrigger.defaults({ scroller: "#scroll-container" });
+  }
+
   var isMobile = window.matchMedia("(max-width: 768px)").matches;
   var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- Nav background after 80px ---------- */
+  /* ---------- Nav background after 80px (container scroll, not window) ---------- */
   var nav = document.getElementById("nav");
-  window.addEventListener("scroll", function () {
-    nav.classList.toggle("scrolled", window.scrollY > 80);
-  }, { passive: true });
+  if (nav && scroller) {
+    scroller.addEventListener("scroll", function () {
+      nav.classList.toggle("scrolled", scroller.scrollTop > 80);
+    }, { passive: true });
+  }
 
   /* ---------- Mobile menu ---------- */
   var toggle = document.getElementById("navToggle");
@@ -28,13 +37,13 @@
     menu.offsetHeight; // force reflow so the transition runs
     menu.classList.add("is-open");
     toggle && toggle.setAttribute("aria-expanded", "true");
-    document.body.style.overflow = "hidden";
+    if (scroller) scroller.style.overflowY = "hidden";
   }
   function closeMenu() {
     if (!menu) return;
     menu.classList.remove("is-open");
     toggle && toggle.setAttribute("aria-expanded", "false");
-    document.body.style.overflow = "";
+    if (scroller) scroller.style.overflowY = "scroll";
     setTimeout(function () { if (!menu.classList.contains("is-open")) menu.hidden = true; }, 450);
   }
   toggle && toggle.addEventListener("click", openMenu);
@@ -120,21 +129,23 @@
         gsap.to(el, {
           yPercent: yPct,
           ease: "none",
-          scrollTrigger: { trigger: panel, start: "top bottom", end: "bottom top", scrub: 0.8 }
+          scrollTrigger: { trigger: panel, scroller: "#scroll-container", start: "top bottom", end: "bottom top", scrub: 0.8 }
         });
       });
     }
 
-    /* Mid-ground tree layers */
-    parallaxY(".panel-1 .layer-mid", -40);
-    parallaxY(".panel-2 .layer-mid", -40);
-    parallaxY(".panel-5 .layer-mid", -35);
+    /* Mid-ground tree layers — animate the imgs, not the wrapper divs:
+       a transform on the wrapper creates a stacking context that breaks
+       the imgs' mix-blend-mode against the background photo */
+    parallaxY(".panel-1 .layer-mid img", -40);
+    parallaxY(".panel-2 .layer-mid img", -40);
+    parallaxY(".panel-5 .layer-mid img", -35);
 
     /* Foreground grass / reeds */
-    parallaxY(".panel-1 .layer-fg", -70);
-    parallaxY(".panel-3 .layer-fg", -70);
-    parallaxY(".panel-6 .layer-fg", -70);
-    parallaxY(".panel-2 .layer-fg", -65);
+    parallaxY(".panel-1 .layer-fg img", -70);
+    parallaxY(".panel-3 .layer-fg img", -70);
+    parallaxY(".panel-6 .layer-fg img", -70);
+    parallaxY(".panel-2 .layer-fg img", -65);
     parallaxY(".p4-grass", -65);
     parallaxY(".p4-reeds", -60);
     parallaxY(".p5-reeds", -60);
@@ -145,7 +156,7 @@
       gsap.to(el, {
         xPercent: -15,
         ease: "none",
-        scrollTrigger: { trigger: panel, start: "top bottom", end: "bottom top", scrub: 0.8 }
+        scrollTrigger: { trigger: panel, scroller: "#scroll-container", start: "top bottom", end: "bottom top", scrub: 0.8 }
       });
     });
 
@@ -155,7 +166,7 @@
       gsap.to(el, {
         yPercent: -10,
         ease: "none",
-        scrollTrigger: { trigger: panel, start: "top bottom", end: "bottom top", scrub: 0.8 }
+        scrollTrigger: { trigger: panel, scroller: "#scroll-container", start: "top bottom", end: "bottom top", scrub: 0.8 }
       });
     });
   }
@@ -332,6 +343,48 @@
         })
         .then(function () { if (submitBtn) submitBtn.disabled = false; });
     });
+  }
+
+  /* ---------- Panel snap ----------
+     CSS scroll-snap (y proximity) is the baseline; this settles the
+     container precisely onto a panel boundary once scrolling pauses
+     within 30% of a viewport of one. Content sections between panels
+     stay freely scrollable — snap only engages near a panel top. */
+  if (scroller && !prefersReduced) {
+    var snapTimer = null;
+    scroller.addEventListener("scroll", function () {
+      if (snapTimer) clearTimeout(snapTimer);
+      snapTimer = setTimeout(function () {
+        var st = scroller.scrollTop;
+        var best = null;
+        var bestDist = window.innerHeight * 0.3;
+        document.querySelectorAll(".panel").forEach(function (p) {
+          var top = p.getBoundingClientRect().top + st;
+          var d = Math.abs(top - st);
+          if (d > 1 && d < bestDist) { bestDist = d; best = top; }
+        });
+        if (best !== null) scroller.scrollTo({ top: best, behavior: "smooth" });
+      }, 160);
+    }, { passive: true });
+  }
+
+  /* ---------- Anchor links — scroll the container, not the window ---------- */
+  if (scroller) {
+    document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        var id = link.getAttribute("href").slice(1);
+        var target = id && document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        var top = target.getBoundingClientRect().top + scroller.scrollTop;
+        scroller.scrollTo({ top: top, behavior: prefersReduced ? "auto" : "smooth" });
+      });
+    });
+  }
+
+  /* ---------- Refresh after full load — images/fonts change scroll distances ---------- */
+  if (hasGsap) {
+    window.addEventListener("load", function () { ScrollTrigger.refresh(); });
   }
 
   /* ---------- Footer year ---------- */

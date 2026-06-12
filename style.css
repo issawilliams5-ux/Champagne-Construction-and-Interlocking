@@ -6,8 +6,35 @@
 
 /* Base reset */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-html, body { width: 100%; overflow-x: hidden; }
+/* ── Scroll Architecture ─────────────────────────────────── */
+/* The window never scrolls; #scroll-container (<main>) is the
+   sole scroller. GSAP ScrollTrigger and the snap system both
+   target it. Nav stays fixed outside the scroll flow. */
+html {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#scroll-container {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  /* proximity (not mandatory): panels snap into place, while the
+     full-height content sections between them remain freely
+     scrollable instead of being trapped by forced snap points */
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+#scroll-container::-webkit-scrollbar {
+  display: none;                /* Chrome/Safari */
+}
 
 :root {
   --ink: #0D0D0D;
@@ -129,6 +156,8 @@ nav#nav.scrolled { background: rgba(13, 13, 13, 0.92); }
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 .panel--tall { min-height: 100vh; height: auto; display: flex; align-items: center; }
 
@@ -157,9 +186,11 @@ nav#nav.scrolled { background: rgba(13, 13, 13, 0.92); }
 .layer-bg--gradient { background: linear-gradient(160deg, #0A0E2A 0%, #050810 100%); }
 .layer-bg--gradient::after { display: none; }
 
-.layer-sky     { z-index: 1; }
-.layer-mid     { z-index: 2; }
-.layer-fg      { z-index: 3; }
+/* sky/mid/fg wrappers must NOT have z-index (or transforms): either
+   creates a stacking context that isolates the imgs' mix-blend-mode
+   from the .layer-bg photo beneath. DOM order (bg → sky → mid → fg →
+   subject → text) already paints them correctly. Parallax transforms
+   are applied to the imgs themselves for the same reason. */
 .layer-subject { z-index: 10; pointer-events: none; }
 .text-block    { z-index: 20; pointer-events: all; }
 
@@ -177,6 +208,26 @@ nav#nav.scrolled { background: rgba(13, 13, 13, 0.92); }
 .layer-sky img { position: absolute; }
 .png-birds { top: 20%; left: 30%; height: 8vh; filter: brightness(0); opacity: .85; }
 .png-moon  { top: 10%; right: 15%; height: 18vh; mix-blend-mode: screen; }
+
+/* Silhouette PNGs ship with white canvas + red halftone baked in.
+   multiply removes white (255 × bg = bg) and keeps black solid,
+   so silhouettes composite cleanly over the photo plates. */
+.layer-sky img,
+.layer-mid img,
+.layer-fg img {
+  mix-blend-mode: multiply;
+}
+
+/* Moon is white-on-dark — multiply would erase it; screen keeps it */
+.layer-sky img.png-moon {
+  mix-blend-mode: screen;
+}
+
+/* Bailey's photographic cutout must never be blended */
+.layer-subject img,
+img.png-bailey {
+  mix-blend-mode: normal !important;
+}
 
 /* ---------- Text blocks on panels ---------- */
 .text-block {
@@ -711,9 +762,16 @@ nav#nav.scrolled { background: rgba(13, 13, 13, 0.92); }
   .layer-sky,
   .layer-mid,
   .layer-fg { display: none; }
-  .png-bailey { height: 42vh; left: 50%; right: auto !important; transform: translateX(-50%); opacity: .55; }
-  .panel--tall .png-bailey { display: none; }
-  .text-block { padding: 0 24px; position: relative; max-width: none; }
+  /* Bailey centred at bottom of each panel on mobile — single,
+     fully opaque instance (the old .55-opacity ghost read as a
+     duplicate behind the layout) */
+  .png-bailey {
+    height: 50vh;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%);
+  }
+  .text-block { padding: 24px; position: relative; max-width: 100%; width: 100%; left: 0; right: 0; }
   .p1-text { top: auto; left: 0; padding: 110px 24px 80px; }
   .panel-1 { height: auto; min-height: 100vh; display: flex; align-items: flex-end; }
   .p2-text, .p3-text, .p5-text { margin: 0 24px; }

@@ -133,7 +133,9 @@
     </nav>
   </div>
 
-  <main>
+  <!-- Sole scroller — html/body are overflow:hidden; GSAP ScrollTrigger
+       and CSS snap both target this container -->
+  <main id="scroll-container">
 
   <!-- ===== PANEL 1 — HERO (prairie) ===== -->
   <section class="panel panel-1" id="hero">
@@ -858,9 +860,7 @@
     </div>
   </section>
 
-  </main>
-
-  <!-- FOOTER -->
+  <!-- FOOTER — must live inside the scroll container: body never scrolls -->
   <footer class="footer">
     <div class="footer__inner">
       <div class="footer__brand">
@@ -903,8 +903,13 @@
     </div>
   </footer>
 
+  </main>
+
+  <!-- 1. GSAP core — must load first, synchronously (no async/defer) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <!-- 2. ScrollTrigger plugin — after GSAP core -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="main.js"></script>
+  <!-- 3. main.js — last, deferred until DOM is parsed -->
+  <script src="main.js" defer></script>
 </body>
 </html>
