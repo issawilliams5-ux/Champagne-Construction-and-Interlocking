@@ -1,394 +1,163 @@
-/* ===========================================================
-   Bailey Church — Public-Sector Accounting & ESG Advisory
-   GSAP ScrollTrigger parallax + site interactions
-   =========================================================== */
-(function () {
-  "use strict";
+// ─────────────────────────────────────────────────────────────────────────────
+// BAILEY CHURCH — VIDEO DESCENT SCROLL SYSTEM
+// GSAP ScrollTrigger drives vertical wipe transitions between 6 looping videos
+// ─────────────────────────────────────────────────────────────────────────────
 
-  var hasGsap = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
-  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger);
 
-  /* CRITICAL: the page scrolls inside #scroll-container, not the window.
-     Every ScrollTrigger must watch the container or snap/scrub never fire. */
-  var scroller = document.getElementById("scroll-container");
-  if (hasGsap && scroller) {
-    ScrollTrigger.defaults({ scroller: "#scroll-container" });
+const TOTAL_SECTIONS = 6;
+
+// ── DOM references ────────────────────────────────────────────────────────────
+const layers         = Array.from(document.querySelectorAll('.video-layer'));
+const uis            = Array.from(document.querySelectorAll('.section-ui'));
+const wipeCurtain    = document.getElementById('wipe-curtain');
+const altitudeFill   = document.getElementById('altitude-fill');
+const altitudeLabels = Array.from(document.querySelectorAll('#altitude-labels span'));
+const nav            = document.getElementById('nav');
+const baileyPng      = document.getElementById('bailey-png');
+const scrollDriver   = document.getElementById('scroll-driver');
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (layers.length !== TOTAL_SECTIONS) {
+  console.error('VIDEO SYSTEM: Expected ' + TOTAL_SECTIONS + ' .video-layer elements, found ' + layers.length);
+}
+
+// ── Bailey PNG positions per section ─────────────────────────────────────────
+const baileyConfig = [
+  { right: '72px', height: '74vh' }, // Everest — tall, proud
+  { right: '60px', height: '68vh' }, // Base camp
+  { right: '48px', height: '70vh' }, // City
+  { right: '64px', height: '66vh' }, // Amazon
+  { right: '56px', height: '68vh' }, // Egypt
+  { right: '40px', height: '72vh' }, // Office — commanding
+];
+
+// ── Active section state ──────────────────────────────────────────────────────
+let currentSection = -1;
+
+function setActiveSection(index) {
+  if (index < 0 || index >= TOTAL_SECTIONS) return;
+  if (index === currentSection) return;
+  currentSection = index;
+
+  uis.forEach((ui, i) => ui.classList.toggle('active', i === index));
+
+  if (altitudeFill) {
+    altitudeFill.style.height = ((index / (TOTAL_SECTIONS - 1)) * 100) + '%';
+  }
+  altitudeLabels.forEach((label, i) => label.classList.toggle('active', i === index));
+
+  if (baileyPng && baileyConfig[index]) {
+    baileyPng.style.right  = baileyConfig[index].right;
+    baileyPng.style.height = baileyConfig[index].height;
   }
 
-  var isMobile = window.matchMedia("(max-width: 768px)").matches;
-  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (nav) nav.classList.toggle('scrolled', index > 0);
+}
 
-  /* ---------- Nav background after 80px (container scroll, not window) ---------- */
-  var nav = document.getElementById("nav");
-  if (nav && scroller) {
-    scroller.addEventListener("scroll", function () {
-      nav.classList.toggle("scrolled", scroller.scrollTop > 80);
-    }, { passive: true });
+// ── Transition logic ──────────────────────────────────────────────────────────
+// The incoming layer's clip-path opens from the bottom edge upward, so the new
+// scene rises into frame as the camera "descends" through altitude layers.
+function transitionToSection(toIndex) {
+  const fromIndex = currentSection;
+  setActiveSection(toIndex);
+  if (toIndex === fromIndex || fromIndex < 0) {
+    // first paint — just make sure target is fully shown, others hidden
+    layers.forEach((l, i) => gsap.set(l, { clipPath: i <= toIndex ? 'inset(0% 0 0 0)' : 'inset(100% 0 0 0)', opacity: 1 }));
+    return;
   }
 
-  /* ---------- Mobile menu ---------- */
-  var toggle = document.getElementById("navToggle");
-  var menu = document.getElementById("mobileMenu");
-  var closeBtn = menu ? menu.querySelector(".mobile-menu__close") : null;
+  const toLayer = layers[toIndex];
+  const goingDown = toIndex > fromIndex;
+  gsap.killTweensOf(layers);
 
-  function openMenu() {
-    if (!menu) return;
-    menu.hidden = false;
-    menu.offsetHeight; // force reflow so the transition runs
-    menu.classList.add("is-open");
-    toggle && toggle.setAttribute("aria-expanded", "true");
-    if (scroller) scroller.style.overflowY = "hidden";
-  }
-  function closeMenu() {
-    if (!menu) return;
-    menu.classList.remove("is-open");
-    toggle && toggle.setAttribute("aria-expanded", "false");
-    if (scroller) scroller.style.overflowY = "scroll";
-    setTimeout(function () { if (!menu.classList.contains("is-open")) menu.hidden = true; }, 450);
-  }
-  toggle && toggle.addEventListener("click", openMenu);
-  closeBtn && closeBtn.addEventListener("click", closeMenu);
-  menu && menu.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", closeMenu); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
-
-  /* ---------- Hero chevron — disappears past hero ---------- */
-  var chevron = document.querySelector(".scroll-chevron");
-  if (chevron && hasGsap) {
-    ScrollTrigger.create({
-      trigger: ".panel-1",
-      start: "bottom 90%",
-      onEnter: function () { chevron.classList.add("is-hidden"); },
-      onLeaveBack: function () { chevron.classList.remove("is-hidden"); }
-    });
+  if (prefersReduced) {
+    layers.forEach((l, i) => gsap.set(l, { clipPath: i === toIndex ? 'inset(0% 0 0 0)' : 'inset(100% 0 0 0)', opacity: 1 }));
+    return;
   }
 
-  /* ---------- Entrance animations (once, not scrubbed) ---------- */
-  if (hasGsap && !prefersReduced) {
-    var entranceGroups = document.querySelectorAll(".text-block, .content-head, .contact-left, .contact-form");
-    entranceGroups.forEach(function (block) {
-      ScrollTrigger.create({
-        trigger: block,
-        start: "top 82%",
-        once: true,
-        onEnter: function () {
-          gsap.from(block.children, {
-            opacity: 0,
-            y: 30,
-            stagger: 0.12,
-            duration: 0.6,
-            ease: "power2.out"
-          });
-        }
+  // Incoming layer sits on top and wipes open from the relevant edge.
+  gsap.set(toLayer, {
+    zIndex: 5,
+    opacity: 1,
+    clipPath: goingDown ? 'inset(100% 0 0% 0)' : 'inset(0% 0 100% 0)'
+  });
+  gsap.to(toLayer, {
+    clipPath: 'inset(0% 0 0% 0)',
+    duration: 0.9,
+    ease: 'power2.inOut',
+    onComplete: () => {
+      // Settle: hide every other layer beneath the now-active one.
+      layers.forEach((l, i) => {
+        if (i !== toIndex) gsap.set(l, { clipPath: 'inset(100% 0 0 0)', zIndex: 0 });
       });
-    });
-
-    // Cards rise in as their grid enters
-    document.querySelectorAll(".grid").forEach(function (grid) {
-      ScrollTrigger.create({
-        trigger: grid,
-        start: "top 85%",
-        once: true,
-        onEnter: function () {
-          gsap.from(grid.children, {
-            opacity: 0,
-            y: 36,
-            stagger: 0.1,
-            duration: 0.6,
-            ease: "power2.out"
-          });
-        }
-      });
-    });
-
-    // Timeline entries
-    document.querySelectorAll(".timeline").forEach(function (tl) {
-      ScrollTrigger.create({
-        trigger: tl,
-        start: "top 85%",
-        once: true,
-        onEnter: function () {
-          gsap.from(tl.children, {
-            opacity: 0,
-            x: -24,
-            stagger: 0.12,
-            duration: 0.55,
-            ease: "power2.out"
-          });
-        }
-      });
-    });
-  }
-
-  /* ---------- Parallax layers (desktop only, scrub 0.8) ---------- */
-  if (hasGsap && !isMobile && !prefersReduced) {
-
-    function parallaxY(selector, yPct) {
-      document.querySelectorAll(selector).forEach(function (el) {
-        var panel = el.closest(".panel");
-        if (!panel) return;
-        gsap.to(el, {
-          yPercent: yPct,
-          ease: "none",
-          scrollTrigger: { trigger: panel, scroller: "#scroll-container", start: "top bottom", end: "bottom top", scrub: 0.8 }
-        });
-      });
+      gsap.set(toLayer, { zIndex: 1 });
     }
+  });
+}
 
-    /* Mid-ground tree layers — animate the imgs, not the wrapper divs:
-       a transform on the wrapper creates a stacking context that breaks
-       the imgs' mix-blend-mode against the background photo */
-    parallaxY(".panel-1 .layer-mid img", -40);
-    parallaxY(".panel-2 .layer-mid img", -40);
-    parallaxY(".panel-5 .layer-mid img", -35);
+// ── ScrollTrigger — one trigger per section, plus continuous progress ─────────
+for (let i = 0; i < TOTAL_SECTIONS; i++) {
+  ScrollTrigger.create({
+    trigger: scrollDriver,
+    start: () => (i / TOTAL_SECTIONS) * 100 + '% top',
+    end:   () => ((i + 1) / TOTAL_SECTIONS) * 100 + '% top',
+    onEnter:     () => transitionToSection(i),
+    onEnterBack: () => transitionToSection(i),
+  });
+}
 
-    /* Foreground grass / reeds */
-    parallaxY(".panel-1 .layer-fg img", -70);
-    parallaxY(".panel-3 .layer-fg img", -70);
-    parallaxY(".panel-6 .layer-fg img", -70);
-    parallaxY(".panel-2 .layer-fg img", -65);
-    parallaxY(".p4-grass", -65);
-    parallaxY(".p4-reeds", -60);
-    parallaxY(".p5-reeds", -60);
-
-    /* Birds — horizontal drift only */
-    document.querySelectorAll(".png-birds").forEach(function (el) {
-      var panel = el.closest(".panel");
-      gsap.to(el, {
-        xPercent: -15,
-        ease: "none",
-        scrollTrigger: { trigger: panel, scroller: "#scroll-container", start: "top bottom", end: "bottom top", scrub: 0.8 }
-      });
-    });
-
-    /* Moon — slight vertical parallax */
-    document.querySelectorAll(".png-moon").forEach(function (el) {
-      var panel = el.closest(".panel");
-      gsap.to(el, {
-        yPercent: -10,
-        ease: "none",
-        scrollTrigger: { trigger: panel, scroller: "#scroll-container", start: "top bottom", end: "bottom top", scrub: 0.8 }
-      });
-    });
+ScrollTrigger.create({
+  trigger: scrollDriver,
+  start: 'top top',
+  end: 'bottom bottom',
+  onUpdate: (self) => {
+    if (altitudeFill) altitudeFill.style.height = (self.progress * 100) + '%';
+    const idx = Math.min(Math.floor(self.progress * TOTAL_SECTIONS), TOTAL_SECTIONS - 1);
+    setActiveSection(idx);
   }
+});
 
-  /* Moon continuous rotation (independent of scroll) */
-  if (hasGsap && !prefersReduced) {
-    gsap.to(".png-moon", { rotation: 360, duration: 120, repeat: -1, ease: "none" });
-  }
+// ── Nav scroll listener (window scroll — body is the scroller here) ───────────
+window.addEventListener('scroll', () => {
+  if (nav) nav.classList.toggle('scrolled', window.scrollY > 80 || currentSection > 0);
+}, { passive: true });
 
-  /* ---------- Animated stat counters ---------- */
-  var statEls = document.querySelectorAll(".stat strong[data-count]");
-  if ("IntersectionObserver" in window && statEls.length && !prefersReduced) {
-    var statIo = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        var el = entry.target;
-        statIo.unobserve(el);
-        var num = parseInt(el.getAttribute("data-count"), 10);
-        var suffix = el.getAttribute("data-suffix") || "";
-        var start = null;
-        var duration = 1600;
-        function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
-        function step(ts) {
-          if (!start) start = ts;
-          var progress = Math.min((ts - start) / duration, 1);
-          el.textContent = Math.round(easeOut(progress) * num) + suffix;
-          if (progress < 1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
-      });
-    }, { threshold: 0.5 });
-    statEls.forEach(function (el) { statIo.observe(el); });
-  }
+// ── Nav link jumps ────────────────────────────────────────────────────────────
+document.querySelectorAll('.nav-links a[data-target]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = parseInt(link.getAttribute('data-target'), 10);
+    const driverHeight = scrollDriver.offsetHeight;
+    const scrollTarget = (target / TOTAL_SECTIONS) * driverHeight + 2;
+    window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+  });
+});
 
-  /* ---------- FAQ accordion (single-open, keyboard accessible) ---------- */
-  var accordion = document.querySelector(".accordion");
-  if (accordion) {
-    var accBtns = Array.prototype.slice.call(accordion.querySelectorAll(".accordion__btn"));
+// ── Scroll indicator fade ─────────────────────────────────────────────────────
+const scrollIndicator = document.querySelector('.scroll-indicator');
+if (scrollIndicator) {
+  window.addEventListener('scroll', () => {
+    const past = window.scrollY > window.innerHeight * 0.2;
+    scrollIndicator.style.opacity = past ? '0' : '1';
+  }, { passive: true });
+}
 
-    function setPanel(btn, open) {
-      var panel = document.getElementById(btn.getAttribute("aria-controls"));
-      if (!panel) return;
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-      panel.style.maxHeight = open ? panel.scrollHeight + "px" : "0px";
-    }
+// ── Video play handling ───────────────────────────────────────────────────────
+// Fade each video in only once it can actually play; if the file is missing or
+// autoplay is blocked, the scene's gradient fallback simply stays visible.
+document.querySelectorAll('.video-layer video').forEach(video => {
+  function reveal() { video.classList.add('is-ready'); }
+  video.addEventListener('canplay', reveal, { once: true });
+  video.play().then(reveal).catch(() => {
+    document.addEventListener('click', () => video.play().then(reveal).catch(() => {}), { once: true });
+    document.addEventListener('touchstart', () => video.play().then(reveal).catch(() => {}), { once: true });
+  });
+});
 
-    accBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var isOpen = btn.getAttribute("aria-expanded") === "true";
-        accBtns.forEach(function (other) { if (other !== btn) setPanel(other, false); });
-        setPanel(btn, !isOpen);
-      });
-    });
-
-    window.addEventListener("resize", function () {
-      accBtns.forEach(function (btn) {
-        if (btn.getAttribute("aria-expanded") === "true") {
-          var panel = document.getElementById(btn.getAttribute("aria-controls"));
-          if (panel) panel.style.maxHeight = panel.scrollHeight + "px";
-        }
-      });
-    }, { passive: true });
-  }
-
-  /* ---------- LinkedIn carousel ---------- */
-  var liTrack = document.getElementById("liTrack");
-  var liViewport = document.getElementById("liViewport");
-  if (liTrack && liViewport) {
-    var liSlides = liTrack.querySelectorAll(".li-slide");
-    var liCount = liSlides.length;
-    var liIndex = 0;
-    var liDots = document.getElementById("liDots");
-    var liAuto = null;
-
-    function liGo(i) {
-      liIndex = (i + liCount) % liCount;
-      liTrack.style.transform = "translateX(" + (-liIndex * 100) + "%)";
-      if (liDots) {
-        liDots.querySelectorAll("button").forEach(function (d, di) {
-          d.classList.toggle("is-active", di === liIndex);
-        });
-      }
-    }
-
-    function restartAuto() {
-      if (liAuto) { window.clearInterval(liAuto); liAuto = null; }
-      if (!prefersReduced) { liAuto = window.setInterval(function () { liGo(liIndex + 1); }, 6000); }
-    }
-
-    if (liDots) {
-      for (var li = 0; li < liCount; li++) {
-        (function (idx) {
-          var b = document.createElement("button");
-          b.setAttribute("aria-label", "Go to post " + (idx + 1));
-          b.addEventListener("click", function () { liGo(idx); restartAuto(); });
-          liDots.appendChild(b);
-        })(li);
-      }
-    }
-
-    var liPrev = document.getElementById("liPrev");
-    var liNext = document.getElementById("liNext");
-    liPrev && liPrev.addEventListener("click", function () { liGo(liIndex - 1); restartAuto(); });
-    liNext && liNext.addEventListener("click", function () { liGo(liIndex + 1); restartAuto(); });
-
-    liViewport.addEventListener("mouseenter", function () { if (liAuto) { window.clearInterval(liAuto); liAuto = null; } });
-    liViewport.addEventListener("mouseleave", restartAuto);
-
-    var liStartX = 0, liDragging = false;
-    liViewport.addEventListener("touchstart", function (e) { liStartX = e.touches[0].clientX; liDragging = true; }, { passive: true });
-    liViewport.addEventListener("touchend", function (e) {
-      if (!liDragging) return;
-      liDragging = false;
-      var dx = e.changedTouches[0].clientX - liStartX;
-      if (Math.abs(dx) > 40) { liGo(liIndex + (dx < 0 ? 1 : -1)); restartAuto(); }
-    }, { passive: true });
-
-    liGo(0);
-    restartAuto();
-  }
-
-  /* ---------- Contact form (posts to Web3Forms → emails bailey@ignitedbybailey.ca) ---------- */
-  var form = document.getElementById("contactForm");
-  var note = document.getElementById("formNote");
-  if (form) {
-    var submitBtn = form.querySelector("button[type=submit]");
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var name = form.querySelector("#fname");
-      var email = form.querySelector("#femail");
-
-      function setNote(msg, success) {
-        if (!note) return;
-        note.textContent = msg;
-        note.classList.toggle("is-success", !!success);
-      }
-
-      if (!name.value.trim() || !email.value.trim()) {
-        setNote("Please add your name and email so I can respond.", false);
-        return;
-      }
-
-      var payload = {
-        access_key: (form.querySelector("[name=access_key]") || {}).value || "",
-        subject: (form.querySelector("[name=subject]") || {}).value || "New website enquiry",
-        from_name: (form.querySelector("[name=from_name]") || {}).value || "Website",
-        botcheck: "",
-        name: name.value.trim(),
-        email: email.value.trim(),
-        organization: (form.querySelector("#forg") || {}).value || "",
-        topic: (form.querySelector("#ftopic") || {}).value || "",
-        message: (form.querySelector("#fmsg") || {}).value || ""
-      };
-
-      if (submitBtn) submitBtn.disabled = true;
-      setNote("Sending your enquiry…", false);
-
-      fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(payload)
-      })
-        .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
-        .then(function (result) {
-          if (result.ok && result.data && result.data.success) {
-            setNote("Thank you, " + payload.name.split(" ")[0] + ". Your enquiry has been sent.", true);
-            form.reset();
-          } else {
-            setNote((result.data && result.data.message) || "Something went wrong. Please try again.", false);
-          }
-        })
-        .catch(function () {
-          setNote("Network error — please try again, or email bailey@ignitedbybailey.ca directly.", false);
-        })
-        .then(function () { if (submitBtn) submitBtn.disabled = false; });
-    });
-  }
-
-  /* ---------- Panel snap ----------
-     CSS scroll-snap (y proximity) is the baseline; this settles the
-     container precisely onto a panel boundary once scrolling pauses
-     within 30% of a viewport of one. Content sections between panels
-     stay freely scrollable — snap only engages near a panel top. */
-  if (scroller && !prefersReduced) {
-    var snapTimer = null;
-    scroller.addEventListener("scroll", function () {
-      if (snapTimer) clearTimeout(snapTimer);
-      snapTimer = setTimeout(function () {
-        var st = scroller.scrollTop;
-        var best = null;
-        var bestDist = window.innerHeight * 0.3;
-        document.querySelectorAll(".panel").forEach(function (p) {
-          var top = p.getBoundingClientRect().top + st;
-          var d = Math.abs(top - st);
-          if (d > 1 && d < bestDist) { bestDist = d; best = top; }
-        });
-        if (best !== null) scroller.scrollTo({ top: best, behavior: "smooth" });
-      }, 160);
-    }, { passive: true });
-  }
-
-  /* ---------- Anchor links — scroll the container, not the window ---------- */
-  if (scroller) {
-    document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-      link.addEventListener("click", function (e) {
-        var id = link.getAttribute("href").slice(1);
-        var target = id && document.getElementById(id);
-        if (!target) return;
-        e.preventDefault();
-        var top = target.getBoundingClientRect().top + scroller.scrollTop;
-        scroller.scrollTo({ top: top, behavior: prefersReduced ? "auto" : "smooth" });
-      });
-    });
-  }
-
-  /* ---------- Refresh after full load — images/fonts change scroll distances ---------- */
-  if (hasGsap) {
-    window.addEventListener("load", function () { ScrollTrigger.refresh(); });
-  }
-
-  /* ---------- Footer year ---------- */
-  var yearEl = document.getElementById("year");
-  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-
-})();
+// ── Refresh ───────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => ScrollTrigger.refresh());
+window.addEventListener('load', () => {
+  ScrollTrigger.refresh();
+  transitionToSection(0);
+});
