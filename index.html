@@ -6,18 +6,18 @@
   <meta name="theme-color" content="#0D0D0D" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230D0D0D'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' font-weight='700' fill='%23E8231A' text-anchor='middle'%3EBC%3C/text%3E%3C/svg%3E" />
   <title>Bailey Church, FCPA, FCA, CIA | Public-Sector Accounting & ESG Advisory</title>
-  <meta name="description" content="Bailey Church, FCPA, FCA, CIA — Ottawa-based Big Four partner and Queen's University lecturer specializing in public-sector accounting, ESG reporting, sustainability assurance, and government financial stewardship." />
+  <meta name="description" content="Bailey Church, FCPA, FCA, CIA — Ottawa-based Big Four partner specializing in public-sector accounting, ESG reporting, sustainability assurance, and government financial stewardship." />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Bailey Church" />
   <meta name="keywords" content="Bailey Church, John Bailey Church, FCPA, FCA, CIA, public sector accounting, ESG reporting, sustainability assurance, Ottawa, CPA Ontario, government financial stewardship" />
   <meta property="og:type" content="profile" />
   <meta property="og:title" content="Bailey Church, FCPA, FCA, CIA | Public-Sector Accounting & ESG Advisory" />
-  <meta property="og:description" content="Ottawa-based Big Four partner and Queen's University lecturer. National leader in public-sector accounting, ESG reporting, and sustainability assurance." />
+  <meta property="og:description" content="Ottawa-based Big Four partner. National leader in public-sector accounting, ESG reporting, and sustainability assurance." />
   <meta property="og:url" content="https://bchurch.vercel.app/" />
   <meta property="og:image" content="https://bchurch.vercel.app/assets/bailey-church.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Bailey Church, FCPA, FCA, CIA" />
-  <meta name="twitter:description" content="Ottawa-based Big Four partner and Queen's University lecturer. National leader in public-sector accounting and ESG reporting." />
+  <meta name="twitter:description" content="Ottawa-based Big Four partner. National leader in public-sector accounting and ESG reporting." />
   <meta name="twitter:image" content="https://bchurch.vercel.app/assets/bailey-church.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,241 +36,185 @@
     "url": "https://bchurch.vercel.app",
     "image": "https://bchurch.vercel.app/assets/bailey-church.jpg",
     "sameAs": ["https://ca.linkedin.com/in/bailey-church-fcpa-fca-cia-65a480"],
-    "description": "Ottawa-based public-sector accounting and ESG advisory leader, FCPA, FCA, CIA. National leader in public-sector accounting advisory and sustainability assurance.",
+    "description": "Ottawa-based public-sector accounting and ESG advisory leader, FCPA, FCA, CIA.",
     "alumniOf": { "@type": "CollegeOrUniversity", "name": "Queen's University" },
     "address": { "@type": "PostalAddress", "addressLocality": "Ottawa", "addressRegion": "ON", "addressCountry": "CA" },
-    "knowsAbout": ["Public Sector Accounting","ESG Reporting","Sustainability Assurance","Government Financial Stewardship","Internal Audit","Financial Reporting"],
-    "knowsLanguage": ["en","fr"],
-    "nationality": { "@type": "Country", "name": "Canada" },
-    "hasCredential": [
-      { "@type": "EducationalOccupationalCredential", "credentialCategory": "Professional Designation", "name": "FCPA — Fellow Chartered Professional Accountant", "recognizedBy": { "@type": "Organization", "name": "CPA Ontario" } },
-      { "@type": "EducationalOccupationalCredential", "credentialCategory": "Professional Designation", "name": "FCA — Fellow Chartered Accountant", "recognizedBy": { "@type": "Organization", "name": "CPA Ontario" } },
-      { "@type": "EducationalOccupationalCredential", "credentialCategory": "Professional Designation", "name": "CIA — Certified Internal Auditor", "recognizedBy": { "@type": "Organization", "name": "Institute of Internal Auditors" } }
-    ]
+    "knowsAbout": ["Public Sector Accounting","ESG Reporting","Sustainability Assurance","Government Financial Stewardship","Natural Capital Accounting","Internal Audit"]
   }
   </script>
 </head>
 <body>
 
-  <!-- Fixed navigation -->
+  <!-- ── Navigation ──────────────────────────────────────────────────────── -->
   <nav id="nav">
-    <div class="nav-logo">
-      Bailey Church
-      <span class="nav-credentials">FCPA · FCA · CIA</span>
+    <div class="nav-inner">
+      <a class="nav-logo" href="#hero">
+        Bailey Church
+        <span class="nav-creds">FCPA · FCA · CIA</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#expertise">Expertise</a></li>
+        <li><a href="#services">Speaking</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
     </div>
-    <ul class="nav-links">
-      <li><a href="#" data-target="0">Summit</a></li>
-      <li><a href="#" data-target="1">Cities</a></li>
-      <li><a href="#" data-target="2">Nature</a></li>
-      <li><a href="#" data-target="3">Heritage</a></li>
-      <li><a href="#" data-target="4">Work</a></li>
-    </ul>
   </nav>
 
-  <!-- Video layers — all stacked, GSAP controls which is visible.
-       Each layer carries a data-scene gradient fallback so the descent
-       reads cinematically even before the mp4 files exist. The <video>
-       fades in over the fallback once it can play. -->
-  <div id="video-stage">
-
-    <div class="video-layer" id="layer-0" data-scene="everest">
-      <video muted loop playsinline preload="auto" poster="assets/posters/poster-everest.jpg">
-        <source src="assets/video-everest.mp4" type="video/mp4">
-      </video>
-      <div class="video-overlay"></div>
-    </div>
-
-    <div class="video-layer" id="layer-1" data-scene="city">
-      <video muted loop playsinline preload="auto" poster="assets/posters/poster-city.jpg">
-        <source src="assets/video-city.mp4" type="video/mp4">
-      </video>
-      <div class="video-overlay"></div>
-    </div>
-
-    <div class="video-layer" id="layer-2" data-scene="amazon">
-      <video muted loop playsinline preload="auto" poster="assets/posters/poster-amazon.jpg">
-        <source src="assets/video-amazon.mp4" type="video/mp4">
-      </video>
-      <div class="video-overlay"></div>
-    </div>
-
-    <div class="video-layer" id="layer-3" data-scene="egypt">
-      <video muted loop playsinline preload="auto" poster="assets/posters/poster-egypt.jpg">
-        <source src="assets/video-egypt.mp4" type="video/mp4">
-      </video>
-      <div class="video-overlay"></div>
-    </div>
-
-    <div class="video-layer" id="layer-4" data-scene="office">
-      <video muted loop playsinline preload="auto" poster="assets/posters/poster-office.jpg">
-        <source src="assets/video-office.mp4" type="video/mp4">
-      </video>
-      <div class="video-overlay"></div>
-    </div>
-
+  <!-- ── Video Background ────────────────────────────────────────────────── -->
+  <div id="video-container">
+    <video id="scroll-video" src="assets/video-descent.mp4" muted playsinline preload="auto"></video>
+    <div class="video-overlay"></div>
   </div>
 
-  <!-- Bailey Church PNG — fixed, shown only on the scenes flagged in main.js -->
-  <img src="assets/png-bailey.png" id="bailey-png" alt="Bailey Church, FCPA, FCA, CIA" />
+  <!-- ── Bailey PNG ─────────────────────────────────────────────────────── -->
+  <img id="bailey-png" src="assets/png-bailey.png" alt="Bailey Church" />
 
-  <!-- Section UI overlays — one per scene, fade in/out -->
+  <!-- ── Scroll Driver ──────────────────────────────────────────────────── -->
+  <div id="scroll-driver"></div>
 
-  <!-- SECTION 0: Everest / Hero -->
-  <div class="section-ui active" id="ui-0">
-    <span class="eyebrow">29,032 ft · Mount Everest</span>
-    <h1>The summit of<br>public trust.</h1>
-    <p class="hero-sub">
-      Bailey Church — FCPA · FCA · CIA<br>
-      ESG Strategy · Public Sector Advisory · Governance
-    </p>
-    <div class="scroll-indicator">
-      <span>Descend</span>
-      <div class="scroll-line"></div>
-    </div>
-  </div>
+  <!-- ── Content Sections ───────────────────────────────────────────────── -->
 
-  <!-- SECTION 1: City / ESG -->
-  <div class="section-ui" id="ui-1">
-    <span class="eyebrow">~3,000 ft · The City</span>
-    <h2>Leading sustainability reporting<br>for the public sector.</h2>
-    <p>As Leader of the Public Sector ESG &amp; Climate Reporting Centre of
-    Expertise at a Big Four firm, Bailey has worked with more than 300
-    governments on sustainability reporting and ISSB guidance.</p>
-    <div class="stat-row">
-      <div class="stat">
-        <span class="stat-num">300+</span>
-        <span class="stat-label">Governments advised</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">AASB</span>
-        <span class="stat-label">Sustainability Assurance Committee</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">NAI</span>
-        <span class="stat-label">Natural Assets Initiative board</span>
+  <section class="content-section" id="hero">
+    <div class="section-inner">
+      <p class="eyebrow">ESG Strategy &amp; Public Sector Advisory</p>
+      <h1>Environmental.<br>Social.<br>Governance.</h1>
+      <p class="body-copy">Bailey Church is an Ottawa-based Canadian accounting and public-sector advisory leader specializing in environmental, social, and governance strategy. With designations as FCPA, FCA, and Certified Internal Auditor, Bailey has advised more than 300 governments on implementing ESG frameworks, sustainability reporting, and natural capital protection as long-term investment assets.</p>
+      <div class="scroll-hint">
+        <span>Scroll to explore</span>
+        <svg width="14" height="22" viewBox="0 0 14 22" fill="none"><rect x="1" y="1" width="12" height="20" rx="6" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/><rect x="5.5" y="4" width="3" height="5" rx="1.5" fill="rgba(255,255,255,0.55)"/></svg>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- SECTION 2: Amazon / Speaking -->
-  <div class="section-ui" id="ui-2">
-    <span class="eyebrow">~600 ft · Amazon Basin</span>
-    <h2>A recognized voice on trust,<br>stewardship, and ESG.</h2>
-    <p>A well-known speaker across Canada on public-sector financial
-    challenges, sustainability, and stewardship.</p>
-    <div class="tag-grid">
-      <span class="tag">Government Finance Officers Association</span>
-      <span class="tag">Institute of Internal Auditors</span>
-      <span class="tag">Financial Management Institute</span>
-      <span class="tag">Canadian Comprehensive Auditing Foundation</span>
-      <span class="tag">Office of the Auditor General</span>
+  <section class="content-section" id="about">
+    <div class="section-inner">
+      <p class="eyebrow">Professional Background</p>
+      <h2>A Career in<br>Public Trust.</h2>
+      <ul class="cred-list">
+        <li><span class="cred-label">Designation</span>FCPA — Fellow Chartered Professional Accountant</li>
+        <li><span class="cred-label">Designation</span>FCA — Fellow Chartered Accountant</li>
+        <li><span class="cred-label">Designation</span>CIA — Certified Internal Auditor</li>
+        <li><span class="cred-label">Role</span>Big Four Partner — National Public Sector Accounting Advisory &amp; ESG Centre of Excellence</li>
+        <li><span class="cred-label">Education</span>Queen's University Smith School of Business</li>
+      </ul>
+      <div class="stat-row">
+        <div class="stat">
+          <span class="stat-num">300+</span>
+          <span class="stat-label">Governments Advised</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">AASB</span>
+          <span class="stat-label">Sustainability Assurance Committee</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">NAI</span>
+          <span class="stat-label">Board Member</span>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- SECTION 3: Egypt / Teaching -->
-  <div class="section-ui" id="ui-3">
-    <span class="eyebrow">~200 ft · The Desert</span>
-    <h2>Educator across Canada's<br>leading institutions.</h2>
-    <p>Bailey has combined professional practice with teaching for many
-    years, lecturing in accounting and business education across the country.</p>
-    <div class="tag-grid">
-      <span class="tag">Queen's University — Smith School of Business</span>
-      <span class="tag">University of Ottawa</span>
-      <span class="tag">Carleton University</span>
-      <span class="tag">Nipissing University</span>
-      <span class="tag">Queen's Advanced Accounting Program</span>
+  <section class="content-section" id="expertise">
+    <div class="section-inner">
+      <p class="eyebrow">Specialization</p>
+      <h2>Natural Capital Protection<br>&amp; ESG Valuation.</h2>
+      <p class="body-copy">Bailey specializes in translating environmental assets — parks, forests, wetlands, water systems — into protected investment vehicles. By applying rigorous ESG frameworks and natural capital accounting methodologies, environmental protection becomes a legitimate, measurable, long-term investment strategy for governments and institutions.</p>
+      <div class="service-cards">
+        <div class="service-card">
+          <h4>Public Sector ESG</h4>
+          <p>ESG implementation across 300+ government entities — from policy design to PSAS-compliant disclosure.</p>
+        </div>
+        <div class="service-card">
+          <h4>Natural Capital Accounting</h4>
+          <p>Monetizing forests, wetlands, and water systems as measurable, protected investment assets.</p>
+        </div>
+        <div class="service-card">
+          <h4>Sustainability Assurance</h4>
+          <p>Independent third-party assurance on sustainability and ESG reporting under evolving standards.</p>
+        </div>
+        <div class="service-card">
+          <h4>Advisory &amp; Education</h4>
+          <p>Lecturing at Queen's, uOttawa, Carleton, and Nipissing — translating technical standards into practice.</p>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- SECTION 4: Office / Work history + Contact -->
-  <div class="section-ui section-ui--wide" id="ui-4">
-    <span class="eyebrow">Ground Level · Ottawa, Ontario</span>
-    <h2>Career &amp; conversation.</h2>
-    <div class="work-contact">
+  <section class="content-section" id="services">
+    <div class="section-inner">
+      <p class="eyebrow">Recognition &amp; Speaking</p>
+      <h2>A Voice on ESG<br>&amp; Public Trust.</h2>
+      <p class="body-copy">Invited speaker and recognized expert across the national and international public finance community.</p>
+      <div class="tag-grid">
+        <span class="tag">GFOA</span>
+        <span class="tag">IIA</span>
+        <span class="tag">FMI</span>
+        <span class="tag">CCAF</span>
+        <span class="tag">OAG</span>
+        <span class="tag">Queen's University</span>
+        <span class="tag">University of Ottawa</span>
+        <span class="tag">Carleton University</span>
+        <span class="tag">Nipissing University</span>
+      </div>
+    </div>
+  </section>
 
-      <!-- Work history -->
-      <div class="work-col">
-        <h3 class="col-head">Work History</h3>
-        <ul class="timeline">
-          <li>
-            <span class="timeline-year">2006 — Present</span>
-            <strong>Big Four — Partner</strong>
-            <span class="timeline-note">National Leader, Public Sector Accounting Advisory &amp; ESG Centre of Expertise</span>
-          </li>
-          <li>
-            <span class="timeline-year">2005 — 2006</span>
-            <strong>Communications Security Establishment</strong>
-            <span class="timeline-note">Internal Audit Team Leader</span>
-          </li>
-          <li>
-            <span class="timeline-year">2003 — 2005</span>
-            <strong>Export Development Canada</strong>
-            <span class="timeline-note">Internal Audit Manager</span>
-          </li>
-          <li>
-            <span class="timeline-year">2000 — 2003</span>
-            <strong>Big Four — Assurance Manager</strong>
-            <span class="timeline-note">Led assurance engagements</span>
-          </li>
-          <li>
-            <span class="timeline-year">1996 — 2000</span>
-            <strong>PricewaterhouseCoopers</strong>
-            <span class="timeline-note">Staff Accountant → Senior Associate</span>
-          </li>
-        </ul>
+  <section class="content-section" id="contact">
+    <div class="section-inner">
+      <p class="eyebrow">Get In Touch</p>
+      <h2>Begin a<br>Conversation.</h2>
+      <p class="body-copy">If you're working on public-sector ESG strategy, natural capital accounting, or sustainability assurance, Bailey welcomes the conversation.</p>
+      <div class="contact-rows">
+        <div class="contact-row">
+          <span class="contact-label">Location</span>
+          <span class="contact-val">Ottawa, Ontario, Canada</span>
+        </div>
+        <div class="contact-row">
+          <span class="contact-label">Firm</span>
+          <span class="contact-val">Big Four — National Public Sector Advisory</span>
+        </div>
+        <div class="contact-row">
+          <span class="contact-label">Designations</span>
+          <span class="contact-val">FCPA · FCA · CIA</span>
+        </div>
+        <div class="contact-row">
+          <span class="contact-label">LinkedIn</span>
+          <span class="contact-val"><a href="https://ca.linkedin.com/in/bailey-church-fcpa-fca-cia-65a480" target="_blank" rel="noopener">bailey-church-fcpa-fca-cia</a></span>
+        </div>
       </div>
 
-      <!-- Enquiry form -->
-      <div class="contact-col">
-        <h3 class="col-head">Send an Enquiry</h3>
-        <form id="enquiryForm" class="enquiry-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
-          <input type="hidden" name="access_key" value="26458bee-5fd4-48cc-809b-e5bf79ebd918" />
-          <input type="hidden" name="subject" value="New enquiry from Bailey Church website" />
-          <input type="hidden" name="from_name" value="Bailey Church Website" />
-          <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <form id="enquiryForm" class="enquiry-form" novalidate>
+        <input type="hidden" name="access_key" value="26458bee-5fd4-48cc-809b-e5bf79ebd918" />
+        <input type="hidden" name="subject" value="New enquiry from Bailey Church website" />
+        <input type="hidden" name="from_name" value="Bailey Church Website" />
+        <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="form-row">
           <div class="field">
             <label for="fname">Name</label>
-            <input type="text" id="fname" name="name" required autocomplete="name" placeholder="Your full name" />
+            <input type="text" id="fname" name="name" required autocomplete="name" />
           </div>
           <div class="field">
             <label for="femail">Email</label>
-            <input type="email" id="femail" name="email" required autocomplete="email" placeholder="you@organization.ca" />
+            <input type="email" id="femail" name="email" required autocomplete="email" />
           </div>
-          <div class="field">
-            <label for="forg">Organization</label>
-            <input type="text" id="forg" name="organization" autocomplete="organization" placeholder="Your organization" />
-          </div>
-          <div class="field">
-            <label for="fmsg">Message</label>
-            <textarea id="fmsg" name="message" rows="3" placeholder="How can I help?"></textarea>
-          </div>
-          <button type="submit" class="enquiry-btn">Send Enquiry</button>
-          <p class="form-note" id="formNote">Reviewed personally · bailey@ignitedbybailey.ca</p>
-        </form>
-      </div>
-
+        </div>
+        <div class="field">
+          <label for="forg">Organization</label>
+          <input type="text" id="forg" name="organization" autocomplete="organization" />
+        </div>
+        <div class="field">
+          <label for="fmsg">Message</label>
+          <textarea id="fmsg" name="message" rows="3"></textarea>
+        </div>
+        <button type="submit" class="enquiry-btn">Send an Enquiry</button>
+        <p class="form-note" id="formNote">Reviewed personally · bailey@ignitedbybailey.ca</p>
+      </form>
     </div>
-  </div>
+  </section>
 
-  <!-- Altitude progress bar -->
-  <div id="altitude-bar">
-    <div id="altitude-fill"></div>
-    <div id="altitude-labels">
-      <span>Everest</span>
-      <span>City</span>
-      <span>Amazon</span>
-      <span>Egypt</span>
-      <span>Office</span>
-    </div>
-  </div>
-
-  <!-- Scroll driver — creates scroll distance, sits behind everything -->
-  <div id="scroll-driver"></div>
-
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="main.js" defer></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
