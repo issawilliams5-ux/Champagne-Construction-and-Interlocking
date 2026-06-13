@@ -5,14 +5,14 @@
 
 gsap.registerPlugin(ScrollTrigger);
 
-const video        = document.getElementById('scroll-video');
-const nav          = document.getElementById('nav');
-const scrollDriver = document.getElementById('scroll-driver');
+const video = document.getElementById('scroll-video');
+const nav   = document.getElementById('nav');
 
 // ── Video scrub on scroll ─────────────────────────────────────────────────
+// The stacked content sections (5 × 100vh) provide the scroll distance.
 function initScrollScrub() {
   ScrollTrigger.create({
-    trigger: scrollDriver,
+    trigger: document.body,
     start: 'top top',
     end: 'bottom bottom',
     scrub: 1.2,
