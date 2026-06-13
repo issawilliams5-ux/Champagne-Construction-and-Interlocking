@@ -5,7 +5,7 @@
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TOTAL_SECTIONS = 6;
+const TOTAL_SECTIONS = 5;
 
 // ── DOM references ────────────────────────────────────────────────────────────
 const layers         = Array.from(document.querySelectorAll('.video-layer'));
@@ -25,7 +25,6 @@ if (layers.length !== TOTAL_SECTIONS) {
 // ── Bailey PNG positions per section ─────────────────────────────────────────
 const baileyConfig = [
   { right: '72px', height: '74vh' }, // Everest — tall, proud
-  { right: '60px', height: '68vh' }, // Base camp
   { right: '48px', height: '70vh' }, // City
   { right: '64px', height: '66vh' }, // Amazon
   { right: '56px', height: '68vh' }, // Egypt
@@ -96,25 +95,19 @@ function transitionToSection(toIndex) {
   });
 }
 
-// ── ScrollTrigger — one trigger per section, plus continuous progress ─────────
-for (let i = 0; i < TOTAL_SECTIONS; i++) {
-  ScrollTrigger.create({
-    trigger: scrollDriver,
-    start: () => (i / TOTAL_SECTIONS) * 100 + '% top',
-    end:   () => ((i + 1) / TOTAL_SECTIONS) * 100 + '% top',
-    onEnter:     () => transitionToSection(i),
-    onEnterBack: () => transitionToSection(i),
-  });
-}
-
+// ── ScrollTrigger — single progress driver ────────────────────────────────────
+// Everything keys off scroll progress so the active scene is correct at ANY
+// scroll position, whether reached by continuous scroll or a jump. The video
+// wipe and the UI both update from the same computed index, so they never
+// desync. The altitude fill tracks raw progress for a smooth bar.
 ScrollTrigger.create({
   trigger: scrollDriver,
   start: 'top top',
   end: 'bottom bottom',
   onUpdate: (self) => {
-    if (altitudeFill) altitudeFill.style.height = (self.progress * 100) + '%';
     const idx = Math.min(Math.floor(self.progress * TOTAL_SECTIONS), TOTAL_SECTIONS - 1);
-    setActiveSection(idx);
+    if (idx !== currentSection) transitionToSection(idx);
+    if (altitudeFill) altitudeFill.style.height = (self.progress * 100) + '%';
   }
 });
 
@@ -144,14 +137,12 @@ if (scrollIndicator) {
 }
 
 // ── Video play handling ───────────────────────────────────────────────────────
-// Fade each video in only once it can actually play; if the file is missing or
-// autoplay is blocked, the scene's gradient fallback simply stays visible.
+// Kick off playback; the poster still covers the gap until frames arrive. If
+// autoplay is blocked, resume on the first user interaction.
 document.querySelectorAll('.video-layer video').forEach(video => {
-  function reveal() { video.classList.add('is-ready'); }
-  video.addEventListener('canplay', reveal, { once: true });
-  video.play().then(reveal).catch(() => {
-    document.addEventListener('click', () => video.play().then(reveal).catch(() => {}), { once: true });
-    document.addEventListener('touchstart', () => video.play().then(reveal).catch(() => {}), { once: true });
+  video.play().catch(() => {
+    document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+    document.addEventListener('touchstart', () => video.play().catch(() => {}), { once: true });
   });
 });
 

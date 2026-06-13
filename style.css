@@ -29,7 +29,7 @@ body {
 #scroll-driver {
   position: relative;
   width: 100%;
-  height: 600vh;       /* 6 sections × 100vh */
+  height: 500vh;       /* 5 sections × 100vh */
   z-index: -1;
   pointer-events: none;
 }
@@ -61,15 +61,17 @@ body {
 }
 #layer-0 { clip-path: inset(0% 0 0 0); }   /* first scene visible */
 
-/* Per-scene gradient fallbacks (descending altitude palette) */
+/* Per-scene gradient fallbacks (descending altitude palette), shown only
+   until each video can play — then the <video> fades in on top. */
 [data-scene="everest"]  { background: linear-gradient(180deg,#2a3a66 0%,#4a5d8f 38%,#cdd7ea 78%,#f3d9a0 100%); }
-[data-scene="basecamp"] { background: linear-gradient(180deg,#3a2f4d 0%,#7a4a52 45%,#d98a4e 80%,#f0c074 100%); }
 [data-scene="city"]     { background: linear-gradient(180deg,#070b1c 0%,#10204a 50%,#1d3a6b 80%,#e8a23a 100%); }
 [data-scene="amazon"]   { background: linear-gradient(180deg,#04140a 0%,#0d3d1e 45%,#1f6b32 80%,#bfe88a 100%); }
 [data-scene="egypt"]    { background: linear-gradient(180deg,#2a1438 0%,#7a2f3e 40%,#d9663a 72%,#f0c074 100%); }
 [data-scene="office"]   { background: linear-gradient(160deg,#0a0e1a 0%,#1a2236 55%,#2e3a52 80%,#caa46a 100%); }
 
-/* Video fills the layer, fades in over the gradient once playable */
+/* Video fills the layer. The poster still shows instantly and is replaced
+   seamlessly by the playing frames; the scene gradient sits behind as the
+   ultimate fallback if neither poster nor video can load. */
 .video-layer video {
   position: absolute;
   top: 50%;
@@ -80,10 +82,7 @@ body {
   width: auto;
   height: auto;
   object-fit: cover;
-  opacity: 0;
-  transition: opacity 1s ease;
 }
-.video-layer video.is-ready { opacity: 1; }
 
 /* Dark overlay on each video for text legibility */
 .video-overlay {
