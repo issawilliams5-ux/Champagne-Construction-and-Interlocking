@@ -144,6 +144,16 @@ document.querySelectorAll('.video-layer video').forEach(video => {
     document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
     document.addEventListener('touchstart', () => video.play().catch(() => {}), { once: true });
   });
+
+  // Soften the loop seam: dip opacity briefly at the tail and head of each
+  // loop so the hard cut of non-seamless stock footage reads as a gentle pulse.
+  var SEAM = 0.45;
+  video.addEventListener('timeupdate', function () {
+    var d = video.duration;
+    if (!d || isNaN(d)) return;
+    var nearSeam = video.currentTime > d - SEAM || video.currentTime < SEAM;
+    video.style.opacity = nearSeam ? '0.55' : '1';
+  });
 });
 
 // ── Refresh ───────────────────────────────────────────────────────────────────
