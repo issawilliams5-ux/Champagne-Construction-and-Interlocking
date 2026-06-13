@@ -15,7 +15,7 @@ function initScrollScrub() {
     trigger: document.body,
     start: 'top top',
     end: 'bottom bottom',
-    scrub: 1.2,
+    scrub: 0.8,
     onUpdate: (self) => {
       if (video.duration) {
         video.currentTime = self.progress * video.duration;
