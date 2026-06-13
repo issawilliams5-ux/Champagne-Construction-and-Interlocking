@@ -28,10 +28,10 @@ if (layers.length !== TOTAL_SECTIONS) {
 // Bailey appears only where he belongs — the hero and the teaching scene —
 // not pasted onto every frame.
 const sceneConfig = [
-  { bailey: true,  right: '72px', height: '76vh' }, // 0 Everest — hero
+  { bailey: true,  right: '72px', height: '76vh' }, // 0 Everest — hero (only scene with Bailey)
   { bailey: false, right: '48px', height: '70vh' }, // 1 City — ESG
   { bailey: false, right: '64px', height: '66vh' }, // 2 Amazon — speaking
-  { bailey: true,  right: '60px', height: '70vh' }, // 3 Egypt — teaching
+  { bailey: false, right: '60px', height: '70vh' }, // 3 Egypt — teaching
   { bailey: false, right: '40px', height: '72vh' }, // 4 Office — work & contact
 ];
 
