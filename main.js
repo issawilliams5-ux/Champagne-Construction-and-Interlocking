@@ -1,16 +1,18 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // BAILEY CHURCH — VIDEO DESCENT SCROLL SYSTEM
-// GSAP ScrollTrigger drives vertical wipe transitions between 6 looping videos
+// Scroll progress drives a frame-locked crossfade between the scene videos,
+// the per-scene UI, the altitude bar, and Bailey's presence — all from one
+// source of truth so nothing can desync or feel "switchy".
 // ─────────────────────────────────────────────────────────────────────────────
 
 gsap.registerPlugin(ScrollTrigger);
 
 const TOTAL_SECTIONS = 5;
+const FADE = 0.6; // crossfade width, in section units (1 = a whole scene)
 
 // ── DOM references ────────────────────────────────────────────────────────────
 const layers         = Array.from(document.querySelectorAll('.video-layer'));
 const uis            = Array.from(document.querySelectorAll('.section-ui'));
-const wipeCurtain    = document.getElementById('wipe-curtain');
 const altitudeFill   = document.getElementById('altitude-fill');
 const altitudeLabels = Array.from(document.querySelectorAll('#altitude-labels span'));
 const nav            = document.getElementById('nav');
@@ -22,108 +24,88 @@ if (layers.length !== TOTAL_SECTIONS) {
   console.error('VIDEO SYSTEM: Expected ' + TOTAL_SECTIONS + ' .video-layer elements, found ' + layers.length);
 }
 
-// ── Bailey PNG positions per section ─────────────────────────────────────────
-const baileyConfig = [
-  { right: '72px', height: '74vh' }, // Everest — tall, proud
-  { right: '48px', height: '70vh' }, // City
-  { right: '64px', height: '66vh' }, // Amazon
-  { right: '56px', height: '68vh' }, // Egypt
-  { right: '40px', height: '72vh' }, // Office — commanding
+// ── Per-scene config ──────────────────────────────────────────────────────────
+// Bailey appears only where he belongs — the hero and the teaching scene —
+// not pasted onto every frame.
+const sceneConfig = [
+  { bailey: true,  right: '72px', height: '76vh' }, // 0 Everest — hero
+  { bailey: false, right: '48px', height: '70vh' }, // 1 City — ESG
+  { bailey: false, right: '64px', height: '66vh' }, // 2 Amazon — speaking
+  { bailey: true,  right: '60px', height: '70vh' }, // 3 Egypt — teaching
+  { bailey: false, right: '40px', height: '72vh' }, // 4 Office — work & contact
 ];
 
-// ── Active section state ──────────────────────────────────────────────────────
-let currentSection = -1;
+function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+function smooth(t) { return t * t * (3 - 2 * t); } // smoothstep for soft fades
 
+// ── Initial stacking: video k sits above k-1, all hidden except the hero ──────
+layers.forEach((layer, k) => {
+  layer.style.zIndex = String(k);
+  layer.style.opacity = k === 0 ? '1' : '0';
+});
+
+// ── Discrete per-scene state (labels, nav, Bailey) ────────────────────────────
+let currentSection = -1;
 function setActiveSection(index) {
-  if (index < 0 || index >= TOTAL_SECTIONS) return;
-  if (index === currentSection) return;
+  if (index === currentSection || index < 0 || index >= TOTAL_SECTIONS) return;
   currentSection = index;
 
-  uis.forEach((ui, i) => ui.classList.toggle('active', i === index));
-
-  if (altitudeFill) {
-    altitudeFill.style.height = ((index / (TOTAL_SECTIONS - 1)) * 100) + '%';
-  }
   altitudeLabels.forEach((label, i) => label.classList.toggle('active', i === index));
-
-  if (baileyPng && baileyConfig[index]) {
-    baileyPng.style.right  = baileyConfig[index].right;
-    baileyPng.style.height = baileyConfig[index].height;
-  }
-
   if (nav) nav.classList.toggle('scrolled', index > 0);
+
+  const cfg = sceneConfig[index];
+  if (baileyPng && cfg) {
+    baileyPng.style.right  = cfg.right;
+    baileyPng.style.height = cfg.height;
+    baileyPng.classList.toggle('is-on', !!cfg.bailey);
+  }
 }
 
-// ── Transition logic ──────────────────────────────────────────────────────────
-// The incoming layer's clip-path opens from the bottom edge upward, so the new
-// scene rises into frame as the camera "descends" through altitude layers.
-function transitionToSection(toIndex) {
-  const fromIndex = currentSection;
-  setActiveSection(toIndex);
-  if (toIndex === fromIndex || fromIndex < 0) {
-    // first paint — just make sure target is fully shown, others hidden
-    layers.forEach((l, i) => gsap.set(l, { clipPath: i <= toIndex ? 'inset(0% 0 0 0)' : 'inset(100% 0 0 0)', opacity: 1 }));
-    return;
-  }
+// ── Frame-locked crossfade driver ─────────────────────────────────────────────
+// sp ∈ [0, TOTAL]. Each video k fades in over [k-FADE, k] and stays lit while it
+// is the topmost layer; the one above crossfades over it as you approach the
+// next scene. Text overlays fade AND drift in lockstep with their video, so the
+// copy moves with the footage instead of switching on a timer.
+function render(sp) {
+  for (let k = 0; k < TOTAL_SECTIONS; k++) {
+    // Video layer: base scene always lit underneath; others fade in by approach.
+    const vop = k === 0 ? 1 : smooth(clamp01((sp - (k - FADE)) / FADE));
+    layers[k].style.opacity = String(vop);
 
-  const toLayer = layers[toIndex];
-  const goingDown = toIndex > fromIndex;
-  gsap.killTweensOf(layers);
-
-  if (prefersReduced) {
-    layers.forEach((l, i) => gsap.set(l, { clipPath: i === toIndex ? 'inset(0% 0 0 0)' : 'inset(100% 0 0 0)', opacity: 1 }));
-    return;
-  }
-
-  // Incoming layer sits on top and wipes open from the relevant edge.
-  gsap.set(toLayer, {
-    zIndex: 5,
-    opacity: 1,
-    clipPath: goingDown ? 'inset(100% 0 0% 0)' : 'inset(0% 0 100% 0)'
-  });
-  gsap.to(toLayer, {
-    clipPath: 'inset(0% 0 0% 0)',
-    duration: 0.9,
-    ease: 'power2.inOut',
-    onComplete: () => {
-      // Settle: hide every other layer beneath the now-active one.
-      layers.forEach((l, i) => {
-        if (i !== toIndex) gsap.set(l, { clipPath: 'inset(100% 0 0 0)', zIndex: 0 });
-      });
-      gsap.set(toLayer, { zIndex: 1 });
+    // Overlay: appears with its scene, departs as the next scene arrives.
+    const appear    = smooth(clamp01((sp - (k - FADE)) / FADE));
+    const disappear = 1 - smooth(clamp01((sp - (k + 1 - FADE)) / FADE));
+    const op = appear * disappear;
+    const ui = uis[k];
+    if (ui) {
+      ui.style.opacity = String(op);
+      ui.style.setProperty('--drift', ((1 - appear) * 36 - (1 - disappear) * 24) + 'px');
+      ui.style.pointerEvents = op > 0.85 ? 'auto' : 'none';
     }
-  });
+  }
 }
 
-// ── ScrollTrigger — single progress driver ────────────────────────────────────
-// Everything keys off scroll progress so the active scene is correct at ANY
-// scroll position, whether reached by continuous scroll or a jump. The video
-// wipe and the UI both update from the same computed index, so they never
-// desync. The altitude fill tracks raw progress for a smooth bar.
 ScrollTrigger.create({
   trigger: scrollDriver,
   start: 'top top',
   end: 'bottom bottom',
   onUpdate: (self) => {
-    const idx = Math.min(Math.floor(self.progress * TOTAL_SECTIONS), TOTAL_SECTIONS - 1);
-    if (idx !== currentSection) transitionToSection(idx);
+    const sp = self.progress * TOTAL_SECTIONS;
+    render(sp);
+    setActiveSection(Math.min(Math.floor(sp + 0.0001), TOTAL_SECTIONS - 1));
     if (altitudeFill) altitudeFill.style.height = (self.progress * 100) + '%';
   }
 });
-
-// ── Nav scroll listener (window scroll — body is the scroller here) ───────────
-window.addEventListener('scroll', () => {
-  if (nav) nav.classList.toggle('scrolled', window.scrollY > 80 || currentSection > 0);
-}, { passive: true });
 
 // ── Nav link jumps ────────────────────────────────────────────────────────────
 document.querySelectorAll('.nav-links a[data-target]').forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const target = parseInt(link.getAttribute('data-target'), 10);
-    const driverHeight = scrollDriver.offsetHeight;
-    const scrollTarget = (target / TOTAL_SECTIONS) * driverHeight + 2;
-    window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+    const max = scrollDriver.offsetHeight - window.innerHeight;
+    // Land in the middle of the target scene's band so it reads fully.
+    const scrollTarget = max * ((target + 0.5) / TOTAL_SECTIONS);
+    window.scrollTo({ top: scrollTarget, behavior: prefersReduced ? 'auto' : 'smooth' });
   });
 });
 
@@ -131,34 +113,79 @@ document.querySelectorAll('.nav-links a[data-target]').forEach(link => {
 const scrollIndicator = document.querySelector('.scroll-indicator');
 if (scrollIndicator) {
   window.addEventListener('scroll', () => {
-    const past = window.scrollY > window.innerHeight * 0.2;
-    scrollIndicator.style.opacity = past ? '0' : '1';
+    scrollIndicator.style.opacity = window.scrollY > window.innerHeight * 0.2 ? '0' : '1';
   }, { passive: true });
 }
 
-// ── Video play handling ───────────────────────────────────────────────────────
-// Kick off playback; the poster still covers the gap until frames arrive. If
-// autoplay is blocked, resume on the first user interaction.
+// ── Video playback + gentle loop-seam softening ───────────────────────────────
 document.querySelectorAll('.video-layer video').forEach(video => {
   video.play().catch(() => {
     document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
     document.addEventListener('touchstart', () => video.play().catch(() => {}), { once: true });
   });
-
-  // Soften the loop seam: dip opacity briefly at the tail and head of each
-  // loop so the hard cut of non-seamless stock footage reads as a gentle pulse.
-  var SEAM = 0.45;
+  const SEAM = 0.4;
   video.addEventListener('timeupdate', function () {
-    var d = video.duration;
+    const d = video.duration;
     if (!d || isNaN(d)) return;
-    var nearSeam = video.currentTime > d - SEAM || video.currentTime < SEAM;
-    video.style.opacity = nearSeam ? '0.55' : '1';
+    const nearSeam = video.currentTime > d - SEAM || video.currentTime < SEAM;
+    video.style.opacity = nearSeam ? '0.7' : '1';
   });
 });
 
-// ── Refresh ───────────────────────────────────────────────────────────────────
-window.addEventListener('resize', () => ScrollTrigger.refresh());
-window.addEventListener('load', () => {
+// ── Contact form → Web3Forms (emails bailey@ignitedbybailey.ca) ───────────────
+const form = document.getElementById('enquiryForm');
+const note = document.getElementById('formNote');
+if (form) {
+  const submitBtn = form.querySelector('button[type=submit]');
+  function setNote(msg, ok) {
+    if (!note) return;
+    note.textContent = msg;
+    note.classList.toggle('is-success', !!ok);
+  }
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = form.querySelector('#fname');
+    const email = form.querySelector('#femail');
+    if (!name.value.trim() || !email.value.trim()) {
+      setNote('Please add your name and email so I can respond.', false);
+      return;
+    }
+    const payload = {
+      access_key: (form.querySelector('[name=access_key]') || {}).value || '',
+      subject: 'New enquiry from Bailey Church website',
+      from_name: 'Bailey Church Website',
+      botcheck: '',
+      name: name.value.trim(),
+      email: email.value.trim(),
+      organization: (form.querySelector('#forg') || {}).value || '',
+      message: (form.querySelector('#fmsg') || {}).value || ''
+    };
+    if (submitBtn) submitBtn.disabled = true;
+    setNote('Sending your enquiry…', false);
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+      .then((result) => {
+        if (result.ok && result.data && result.data.success) {
+          setNote('Thank you, ' + payload.name.split(' ')[0] + '. Your enquiry has been sent.', true);
+          form.reset();
+        } else {
+          setNote((result.data && result.data.message) || 'Something went wrong. Please try again.', false);
+        }
+      })
+      .catch(() => setNote('Network error — please email bailey@ignitedbybailey.ca directly.', false))
+      .then(() => { if (submitBtn) submitBtn.disabled = false; });
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+function init() {
   ScrollTrigger.refresh();
-  transitionToSection(0);
-});
+  render(window.scrollY / (scrollDriver.offsetHeight - window.innerHeight) * TOTAL_SECTIONS || 0);
+  setActiveSection(0);
+}
+window.addEventListener('resize', () => ScrollTrigger.refresh());
+window.addEventListener('load', init);

@@ -12,7 +12,7 @@
 
 /* ── Scroll architecture ─────────────────────────────────────
    The page scrolls normally against an in-flow #scroll-driver
-   that is 600vh tall (6 scenes × 100vh). Every visual element is
+   that is 500vh tall (5 scenes × 100vh). Every visual element is
    position:fixed on top of it. A fixed driver (as in the brief)
    would be out of flow and create no scroll distance — so it must
    stay in-flow for ScrollTrigger to have anything to track. */
@@ -54,12 +54,12 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  clip-path: inset(100% 0 0 0);   /* hidden — rises up from bottom */
-  will-change: clip-path;
+  opacity: 0;                 /* JS crossfades this against scroll progress */
+  will-change: opacity;
   background-size: cover;
   background-position: center;
 }
-#layer-0 { clip-path: inset(0% 0 0 0); }   /* first scene visible */
+#layer-0 { opacity: 1; }      /* first scene lit until JS takes over */
 
 /* Per-scene gradient fallbacks (descending altitude palette), shown only
    until each video can play — then the <video> fades in on top. */
@@ -83,6 +83,12 @@ body {
   height: auto;
   object-fit: cover;
   transition: opacity 0.45s ease;
+  /* slow cinematic drift so a held scene never feels static */
+  animation: kenburns 32s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  from { transform: translate(-50%, -50%) scale(1); }
+  to   { transform: translate(-50%, -50%) scale(1.08); }
 }
 
 /* Dark overlay on each video for text legibility */
@@ -98,19 +104,6 @@ body {
   pointer-events: none;
 }
 
-/* ── Wipe curtain ────────────────────────────────────────── */
-#wipe-curtain {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #000;
-  z-index: 8;
-  transform: translateY(100%);
-  pointer-events: none;
-  will-change: transform;
-}
 
 /* ── Bailey PNG ──────────────────────────────────────────── */
 #bailey-png {
@@ -121,15 +114,17 @@ body {
   z-index: 20;
   object-fit: contain;
   pointer-events: none;
+  opacity: 0;            /* shown only on scenes flagged in sceneConfig */
   /* photographic cutout — must never be blended */
   mix-blend-mode: normal;
   filter: drop-shadow(-12px 0 60px rgba(0, 0, 0, 0.7));
   transition:
     height 0.8s cubic-bezier(0.4, 0, 0.2, 1),
     right 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.5s ease;
-  will-change: height, right;
+    opacity 0.7s ease;
+  will-change: height, right, opacity;
 }
+#bailey-png.is-on { opacity: 1; }
 
 /* ── Navigation ──────────────────────────────────────────── */
 #nav {
@@ -189,18 +184,14 @@ body {
   position: fixed;
   top: 50%;
   left: 64px;
-  transform: translateY(-50%);
+  transform: translateY(calc(-50% + var(--drift, 0px)));
   max-width: 580px;
   z-index: 50;
-  opacity: 0;
+  opacity: 0;            /* JS scrubs opacity + --drift in step with the video */
   pointer-events: none;
-  transition: opacity 0.6s ease;
-  will-change: opacity;
+  will-change: opacity, transform;
 }
-.section-ui.active {
-  opacity: 1;
-  pointer-events: all;
-}
+#ui-0 { opacity: 1; }    /* hero visible before JS takes over (no load flash) */
 
 .eyebrow {
   display: block;
@@ -347,6 +338,94 @@ body {
   display: inline-block;
 }
 .enquiry-btn:hover { background: #c41a13; transform: translateY(-2px); }
+.enquiry-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+
+/* ── Work + contact scene (final / office) ───────────────── */
+.section-ui--wide { max-width: 920px; }
+.work-contact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 8px;
+}
+.col-head {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #E8231A;
+  margin-bottom: 16px;
+}
+
+/* Work history timeline */
+.timeline { list-style: none; position: relative; }
+.timeline li {
+  position: relative;
+  padding: 0 0 16px 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.16);
+}
+.timeline li:last-child { padding-bottom: 0; }
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -4px; top: 4px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #E8231A;
+}
+.timeline-year {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.6);
+}
+.timeline strong {
+  display: block;
+  font-size: 14px;
+  color: #fff;
+  margin: 2px 0;
+}
+.timeline-note {
+  display: block;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Enquiry form */
+.enquiry-form { display: flex; flex-direction: column; gap: 12px; }
+.enquiry-form .field { display: flex; flex-direction: column; gap: 5px; }
+.enquiry-form label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+.enquiry-form input,
+.enquiry-form textarea {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-left: 2px solid #E8231A;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 10px 12px;
+  width: 100%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: border-color 0.2s;
+}
+.enquiry-form input:focus,
+.enquiry-form textarea:focus { outline: none; border-color: #E8231A; }
+.enquiry-form textarea { resize: vertical; min-height: 64px; }
+.enquiry-form .enquiry-btn { margin-top: 4px; width: 100%; text-align: center; }
+.form-note { font-size: 11px; color: rgba(255, 255, 255, 0.55); margin: 0; }
+.form-note.is-success { color: #8fe388; }
+/* Honeypot — hidden from humans, bots fill it */
+.hp-field { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; }
 
 /* Scroll indicator */
 .scroll-indicator {
@@ -436,17 +515,19 @@ body {
     right: 20px;
     max-width: calc(100vw - 40px);
     top: auto;
-    bottom: 132px;
-    transform: none;
+    bottom: 116px;
+    transform: translateY(var(--drift, 0px));
   }
   .section-ui h1 { font-size: 36px; }
-  .section-ui h2 { font-size: 26px; }
+  .section-ui h2 { font-size: 24px; }
 
-  #bailey-png {
-    height: 42vh;
-    right: 0;
-    opacity: 0.32;
-  }
+  /* Bailey, where shown, sits behind the copy and softened for legibility */
+  #bailey-png { height: 40vh; right: 0; }
+  #bailey-png.is-on { opacity: 0.3; }
+
+  /* The work + contact scene scrolls within its own panel on small screens */
+  #ui-4 { bottom: 24px; top: 64px; overflow-y: auto; }
+  .work-contact { grid-template-columns: 1fr; gap: 22px; }
 
   #altitude-bar { display: none; }
   .stat-row { flex-direction: column; gap: 20px; }

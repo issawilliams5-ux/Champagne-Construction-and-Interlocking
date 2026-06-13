@@ -110,10 +110,7 @@
 
   </div>
 
-  <!-- Vertical wipe transition element — rises during transitions -->
-  <div id="wipe-curtain"></div>
-
-  <!-- Bailey Church PNG — fixed, always on screen -->
+  <!-- Bailey Church PNG — fixed, shown only on the scenes flagged in main.js -->
   <img src="assets/png-bailey.png" id="bailey-png" alt="Bailey Church, FCPA, FCA, CIA" />
 
   <!-- Section UI overlays — one per scene, fade in/out -->
@@ -185,33 +182,74 @@
     </div>
   </div>
 
-  <!-- SECTION 4: Office / Contact -->
-  <div class="section-ui" id="ui-4">
+  <!-- SECTION 4: Office / Work history + Contact -->
+  <div class="section-ui section-ui--wide" id="ui-4">
     <span class="eyebrow">Ground Level · Ottawa, Ontario</span>
-    <h2>Begin a conversation.</h2>
-    <p>For consultation, speaking, teaching, or advisory enquiries related
-    to public-sector accounting, ESG reporting, and sustainability assurance.</p>
-    <div class="contact-block">
-      <div class="contact-row">
-        <span class="contact-label">BASED IN</span>
-        <span>Ottawa, Ontario, Canada</span>
+    <h2>Career &amp; conversation.</h2>
+    <div class="work-contact">
+
+      <!-- Work history -->
+      <div class="work-col">
+        <h3 class="col-head">Work History</h3>
+        <ul class="timeline">
+          <li>
+            <span class="timeline-year">2006 — Present</span>
+            <strong>Big Four — Partner</strong>
+            <span class="timeline-note">National Leader, Public Sector Accounting Advisory &amp; ESG Centre of Expertise</span>
+          </li>
+          <li>
+            <span class="timeline-year">2005 — 2006</span>
+            <strong>Communications Security Establishment</strong>
+            <span class="timeline-note">Internal Audit Team Leader</span>
+          </li>
+          <li>
+            <span class="timeline-year">2003 — 2005</span>
+            <strong>Export Development Canada</strong>
+            <span class="timeline-note">Internal Audit Manager</span>
+          </li>
+          <li>
+            <span class="timeline-year">2000 — 2003</span>
+            <strong>Big Four — Assurance Manager</strong>
+            <span class="timeline-note">Led assurance engagements</span>
+          </li>
+          <li>
+            <span class="timeline-year">1996 — 2000</span>
+            <strong>PricewaterhouseCoopers</strong>
+            <span class="timeline-note">Staff Accountant → Senior Associate</span>
+          </li>
+        </ul>
       </div>
-      <div class="contact-row">
-        <span class="contact-label">FIRM</span>
-        <span>Big Four — Public Sector Accounting Advisory</span>
+
+      <!-- Enquiry form -->
+      <div class="contact-col">
+        <h3 class="col-head">Send an Enquiry</h3>
+        <form id="enquiryForm" class="enquiry-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+          <input type="hidden" name="access_key" value="26458bee-5fd4-48cc-809b-e5bf79ebd918" />
+          <input type="hidden" name="subject" value="New enquiry from Bailey Church website" />
+          <input type="hidden" name="from_name" value="Bailey Church Website" />
+          <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <div class="field">
+            <label for="fname">Name</label>
+            <input type="text" id="fname" name="name" required autocomplete="name" placeholder="Your full name" />
+          </div>
+          <div class="field">
+            <label for="femail">Email</label>
+            <input type="email" id="femail" name="email" required autocomplete="email" placeholder="you@organization.ca" />
+          </div>
+          <div class="field">
+            <label for="forg">Organization</label>
+            <input type="text" id="forg" name="organization" autocomplete="organization" placeholder="Your organization" />
+          </div>
+          <div class="field">
+            <label for="fmsg">Message</label>
+            <textarea id="fmsg" name="message" rows="3" placeholder="How can I help?"></textarea>
+          </div>
+          <button type="submit" class="enquiry-btn">Send Enquiry</button>
+          <p class="form-note" id="formNote">Reviewed personally · bailey@ignitedbybailey.ca</p>
+        </form>
       </div>
-      <div class="contact-row">
-        <span class="contact-label">DESIGNATIONS</span>
-        <span>FCPA · FCA · CIA</span>
-      </div>
-      <div class="contact-row">
-        <span class="contact-label">LINKEDIN</span>
-        <a href="https://ca.linkedin.com/in/bailey-church-fcpa-fca-cia-65a480" target="_blank" rel="noopener noreferrer">
-          bailey-church-fcpa-fca-cia ↗
-        </a>
-      </div>
+
     </div>
-    <a class="enquiry-btn" href="mailto:bailey@ignitedbybailey.ca?subject=Enquiry%20from%20bchurch.vercel.app">Send an Enquiry</a>
   </div>
 
   <!-- Altitude progress bar -->
