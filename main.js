@@ -3,7 +3,14 @@
 // Scroll progress scrubs video.currentTime so the descent plays as you scroll.
 // ─────────────────────────────────────────────────────────────────────────────
 
-gsap.registerPlugin(ScrollTrigger);
+// GSAP is loaded from a CDN. When that request fails — an ad blocker, an offline
+// visitor, a jsdelivr outage — `gsap` and `ScrollTrigger` are simply undefined.
+// Referencing them at top level threw a ReferenceError that aborted this whole
+// file, so the nav, the smooth-scroll links and the contact form never bound
+// either: a blocked CDN silently took out the enquiry form. Detect instead, and
+// scrub the video natively when the library is absent.
+const hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 
 const video = document.getElementById('scroll-video');
 const nav   = document.getElementById('nav');
@@ -25,13 +32,33 @@ function initScrollScrub() {
   ScrollTrigger.refresh();
 }
 
-if (video.readyState >= 1) {
-  initScrollScrub();
-} else {
-  video.addEventListener('loadedmetadata', initScrollScrub, { once: true });
+// Same mapping ScrollTrigger uses for body top-top → bottom-bottom, minus the
+// eased scrub: rAF-throttled so a scroll burst still costs one seek per frame.
+function initNativeScrub() {
+  let queued = false;
+  function apply() {
+    queued = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max <= 0 || !video.duration) return;
+    const progress = Math.min(1, Math.max(0, window.scrollY / max));
+    video.currentTime = progress * video.duration;
+  }
+  window.addEventListener('scroll', () => {
+    if (!queued) { queued = true; requestAnimationFrame(apply); }
+  }, { passive: true });
+  apply();
 }
 
-video.load();
+const startScrub = hasGsap ? initScrollScrub : initNativeScrub;
+
+if (video) {
+  if (video.readyState >= 1) {
+    startScrub();
+  } else {
+    video.addEventListener('loadedmetadata', startScrub, { once: true });
+  }
+  video.load();
+}
 
 // ── Nav dark on scroll ────────────────────────────────────────────────────
 window.addEventListener('scroll', () => {
